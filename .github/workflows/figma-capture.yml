@@ -1,0 +1,122 @@
+name: Temporary Figma capture
+
+on:
+  push:
+    branches:
+      - figma-capture
+    paths:
+      - .github/workflows/figma-capture.yml
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: |
+          npm init -y
+          npm install playwright@1.54.2
+          npx playwright install chromium --with-deps
+
+      - name: Capture production page into Figma
+        env:
+          CAPTURE_ID: 64c7b828-dc80-40ca-b348-7b8b39fdecc4
+          CAPTURE_ENDPOINT: https://mcp.figma.com/mcp/capture/64c7b828-dc80-40ca-b348-7b8b39fdecc4/submit?bindVariables=true
+          TARGET_URL: https://cvt-expert-moscow.vbzvzudvd.chatgpt.site/
+        run: |
+          cat > capture.cjs <<'NODE'
+          const { chromium } = require('playwright');
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const context = await browser.newContext({
+              viewport: { width: 1440, height: 900 },
+              deviceScaleFactor: 1,
+            });
+            const page = await context.newPage();
+
+            await page.route('**/*', async (route) => {
+              try {
+                const response = await route.fetch();
+                const headers = { ...response.headers() };
+                delete headers['content-security-policy'];
+                delete headers['content-security-policy-report-only'];
+                await route.fulfill({ response, headers });
+              } catch {
+                await route.continue();
+              }
+            });
+
+            await page.goto(process.env.TARGET_URL, {
+              waitUntil: 'domcontentloaded',
+              timeout: 120000,
+            });
+            await page.waitForTimeout(3000);
+
+            await page.addStyleTag({
+              content: `
+                *, *::before, *::after {
+                  animation-delay: 0s !important;
+                  animation-duration: 0s !important;
+                  transition: none !important;
+                }
+                .reveal, [data-reveal] {
+                  opacity: 1 !important;
+                  transform: none !important;
+                  visibility: visible !important;
+                }
+              `,
+            });
+
+            await page.evaluate(async () => {
+              const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+              const maxY = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+              for (let y = 0; y < maxY; y += 650) {
+                window.scrollTo(0, y);
+                await pause(120);
+              }
+              window.scrollTo(0, 0);
+              await pause(500);
+            });
+
+            const scriptResponse = await context.request.get(
+              'https://mcp.figma.com/mcp/html-to-design/capture.js'
+            );
+            if (!scriptResponse.ok()) {
+              throw new Error(`Could not load Figma capture script: ${scriptResponse.status()}`);
+            }
+            const captureScript = await scriptResponse.text();
+            await page.evaluate((source) => {
+              const script = document.createElement('script');
+              script.textContent = source;
+              document.head.appendChild(script);
+            }, captureScript);
+            await page.waitForTimeout(1000);
+
+            const result = await page.evaluate(
+              ({ captureId, endpoint }) =>
+                window.figma.captureForDesign({
+                  captureId,
+                  endpoint,
+                  selector: 'body',
+                }),
+              {
+                captureId: process.env.CAPTURE_ID,
+                endpoint: process.env.CAPTURE_ENDPOINT,
+              }
+            );
+
+            console.log(JSON.stringify(result));
+            await browser.close();
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+          node capture.cjs
