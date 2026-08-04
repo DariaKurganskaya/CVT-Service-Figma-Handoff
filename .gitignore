@@ -1,0 +1,24 @@
+node_modules/
+dist/
+.next/
+.wrangler/
+.cache/
+coverage/
+tmp/
+output/
+artifacts/
+deliverables/
+*.zip
+*.tgz
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# Only the five requested full-page screenshots are versioned.
+screenshots/*/*.png
+!screenshots/1200/full-page.png
+!screenshots/960/full-page.png
+!screenshots/640/full-page.png
+!screenshots/480/full-page.png
+!screenshots/320/full-page.png
