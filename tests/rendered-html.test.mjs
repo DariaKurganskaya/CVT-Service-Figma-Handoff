@@ -30,26 +30,30 @@ test("server-renders the finished CVT Сервис landing page", async () => {
 
   const html = await response.text();
   assert.match(html, /<title>CVT Сервис — ремонт вариаторов в Москве<\/title>/i);
-  assert.match(html, /Ремонт вариатора/);
-  assert.match(html, /Бесплатно диагностируем неисправность за 30 минут/);
+  assert.match(html, /Профессиональный ремонт/);
+  assert.match(html, /Бесплатно за 30 минут найдём причину неисправности/);
   assert.match(html, /Мы эксперты/);
   assert.match(html, /наши услуги/i);
   assert.match(html, /Что говорят/);
-  assert.match(html, /\+7 \(915\) 644-26-41/);
+  assert.match(html, /\+7 \(950\) 701-82-52/);
+  assert.match(html, /Ступинский проезд 5 стр\. 6/);
+  assert.doesNotMatch(html, /Обручева|\+7 \(915\) 644-26-41|servise@remontvariatora1\.ru/);
   assert.doesNotMatch(html, /Your site is taking shape|codex-preview/i);
 });
 
 test("keeps the client content and local visual assets wired", async () => {
-  const [page, layout, styles] = await Promise.all([
+  const [page, layout, styles, leadForm, mobileMenu] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/lead-form.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/mobile-menu.tsx", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /8 500\+/);
   assert.match(page, /до 24 месяцев/);
-  assert.match(page, /Обручева 52с13/);
-  assert.match(page, /servise@remontvariatora1\.ru/);
+  assert.match(page, /Ступинский проезд 5 стр\. 6/);
+  assert.match(page, /info@remontvariator\.ru/);
   assert.match(page, /yandex\.ru\/map-widget/);
   assert.match(styles, /hero-variator-real\.jpg/);
   assert.match(styles, /background-position: 57% 365px/);
@@ -66,9 +70,19 @@ test("keeps the client content and local visual assets wired", async () => {
   assert.match(page, /className="footerMenu"/);
   assert.match(page, /className="contactEmail"/);
   assert.doesNotMatch(page, /На фото — вариатор CVT|cvtProof/);
-  assert.match(page, /about-workshop-real\.jpg/);
+  assert.match(page, /service-diagnostic\.webp/);
   assert.match(page, /process-repair-real\.jpg/);
-  assert.doesNotMatch(page, /\+7 \(950\)|\+7 \(977\)|akpp11122023|79014037963/);
+  assert.match(page, /\+7 \(950\) 701-82-52/);
+  assert.match(page, /https:\/\/wa\.me\/79014037963/);
+  assert.match(page, /https:\/\/web\.max\.ru/);
+  assert.match(page, /href="#guarantee"/);
+  assert.match(page, /reviews\.slice\(0, 3\)/);
+  assert.doesNotMatch(page, /Обручева|servise@remontvariatora1\.ru|mailto:servise/);
+  assert.match(leadForm, /NEXT_PUBLIC_LEAD_FORM_ENDPOINT/);
+  assert.match(leadForm, /fetch\(endpoint/);
+  assert.doesNotMatch(leadForm, /mailto:|alert\(/);
+  assert.match(mobileMenu, /removeAttribute\("open"\)/);
+  assert.match(mobileMenu, /#guarantee/);
   assert.match(layout, /CVT Сервис — ремонт вариаторов/);
 
   await Promise.all([
@@ -77,7 +91,7 @@ test("keeps the client content and local visual assets wired", async () => {
     access(new URL("../public/social/max.png", import.meta.url)),
     access(new URL("../public/social/telegram.png", import.meta.url)),
     access(new URL("../public/social/whatsapp.png", import.meta.url)),
-    access(new URL("../public/about-workshop-real.jpg", import.meta.url)),
+    access(new URL("../public/service-diagnostic.webp", import.meta.url)),
     access(new URL("../public/process-repair-real.jpg", import.meta.url)),
     access(new URL("../public/brands/nissan.png", import.meta.url)),
     access(new URL("../public/brands/toyota.png", import.meta.url)),

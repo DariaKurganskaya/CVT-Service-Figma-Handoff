@@ -1,3 +1,17 @@
+import { LeadForm } from "./lead-form";
+import { MobileMenu } from "./mobile-menu";
+
+const contacts = {
+  phoneDisplay: "+7 (950) 701-82-52",
+  phoneHref: "tel:+79507018252",
+  address: "г. Москва, Ступинский проезд 5 стр. 6",
+  email: "info@remontvariator.ru",
+  emailHref: "mailto:info@remontvariator.ru",
+  mapText: "г. Москва, Ступинский проезд 5 стр. 6",
+};
+
+const mapQuery = encodeURIComponent(contacts.mapText);
+
 const stats = [
   { value: "16+", label: "лет специализации" },
   { value: "8 500+", label: "восстановленных CVT" },
@@ -100,19 +114,31 @@ const brands = [
 ];
 
 const socialLinks = [
-  { name: "MAX", href: "https://max.ru/", icon: "/social/max.png" },
+  { name: "MAX", href: "https://web.max.ru/", icon: "/social/max.png" },
   { name: "Telegram", href: "https://t.me/inkom10", icon: "/social/telegram.png" },
-  { name: "WhatsApp", href: "https://wa.me/79156442641", icon: "/social/whatsapp.png" },
+  { name: "WhatsApp", href: "https://wa.me/79014037963", icon: "/social/whatsapp.png" },
 ];
 
 function SocialLinks({ className }: { className: string }) {
   return (
     <div className={className} aria-label="Мессенджеры">
       {socialLinks.map((social) => (
-        <a href={social.href} aria-label={social.name} title={social.name} key={social.name}>
+        <a href={social.href} aria-label={social.name} title={social.name} target="_blank" rel="noopener noreferrer" key={social.name}>
           <img src={social.icon} alt="" aria-hidden="true" />
         </a>
       ))}
+    </div>
+  );
+}
+
+function SectionCta() {
+  return (
+    <div className="sectionCta">
+      <div>
+        <strong>Бесплатная консультация</strong>
+        <span>Записаться на бесплатную проверку</span>
+      </div>
+      <a href="#diagnostic-form">Бесплатная консультация <span>→</span></a>
     </div>
   );
 }
@@ -128,74 +154,37 @@ export default function Home() {
             <img src="/client-logo-clean.png" alt="CVT Сервис — ремонт вариаторов" />
           </a>
 
-          <a className="headerPhone" href="tel:+79156442641">
-            +7 (915) 644-26-41
+          <a className="headerPhone" href={contacts.phoneHref}>
+            {contacts.phoneDisplay}
           </a>
 
           <div className="headerMeta">
-            <span className="headerAddress"><strong>Обручева 52с13</strong><br />Москва</span>
+            <span className="headerAddress"><strong>Ступинский проезд 5 стр. 6</strong><br />Москва</span>
             <span className="headerHours">Пн–Вс: с 08:00<br />до 21:00</span>
           </div>
 
           <SocialLinks className="headerSocials" />
-
-          <details className="mobileMenu">
-            <summary aria-label="Открыть меню">Меню</summary>
-            <nav>
-              <a href="#about">О нас</a>
-              <a href="#services">Услуги</a>
-              <a href="#process">Как мы работаем</a>
-              <a href="#reviews">Отзывы</a>
-              <a href="#contacts">Контакты</a>
-            </nav>
-          </details>
+          <MobileMenu />
         </header>
 
         <div className="heroContent shell">
           <div className="heroCard">
             <p className="eyebrow">специализированный сервис cvt</p>
-            <h1>
-              <span>Ремонт вариатора</span>
-              <span className="heroTitleRed">под ключ за 1–3 дня</span>
+            <h1 aria-label="Профессиональный ремонт вариаторов (CVT) авто разных марок с гарантией до 24 месяцев">
+              <span>Профессиональный ремонт</span>
+              <span>вариаторов (CVT) авто</span>
+              <span>разных марок с гарантией</span>
+              <span className="heroTitleRed">до 24 месяцев</span>
             </h1>
 
-            <h2>Бесплатно диагностируем неисправность за 30 минут*</h2>
+            <h2>Бесплатно за 30 минут найдём причину неисправности*, и согласуем стоимость до начала ремонта</h2>
             <p>
-              Ремонтируем вариаторы Nissan и других марок. Показываем каждый
-              этап работ, заранее согласовываем смету и даём гарантию до 2 лет.
+              Ремонтируем вариаторы абсолютно всех марок авто. Показываем каждый этап работ,
+              заранее согласовываем смету и даём гарантию до 2 лет.
             </p>
           </div>
 
-          <form
-            className="diagnosticForm"
-            id="diagnostic-form"
-            action="mailto:servise@remontvariatora1.ru"
-            method="post"
-            encType="text/plain"
-          >
-            <div className="formTitle">
-              <span>Бесплатная консультация</span>
-              <strong>Получите скидку 10% на ремонт</strong>
-            </div>
-            <div className="formFields">
-              <label>
-                <span>Имя</span>
-                <input type="text" name="Имя" placeholder="Ваше имя" required />
-              </label>
-              <label>
-                <span>Телефон</span>
-                <input type="tel" name="Телефон" placeholder="+7 (___) ___-__-__" inputMode="tel" required />
-              </label>
-              <label className="commentField">
-                <span>Сообщение</span>
-                <input type="text" name="Сообщение" placeholder="Марка авто или симптом" />
-              </label>
-              <button type="submit">Записаться</button>
-            </div>
-            <p className="formConsent">
-              Нажимая на кнопку, вы подтверждаете согласие с политикой конфиденциальности.
-            </p>
-          </form>
+          <LeadForm variant="hero" />
 
           <div className="heroStats" aria-label="Показатели сервиса">
             {stats.map((stat) => (
@@ -213,7 +202,8 @@ export default function Home() {
           <a href="#about">О нас</a>
           <a href="#process">Как мы работаем</a>
           <a href="#services">Виды работ</a>
-          <a href="#advantages">Почему мы</a>
+          <a href="#brands">Марки авто</a>
+          <a href="#guarantee">Гарантия</a>
           <a href="#reviews">Отзывы</a>
           <a href="#contacts">Контакты</a>
         </div>
@@ -228,22 +218,21 @@ export default function Home() {
 
           <div className="aboutCopy">
             <p className="largeCopy">
-              Уже более 16 лет мы специализируемся исключительно на ремонте
-              вариатора, успешно восстановив свыше 8 500 коробок любой сложности.
+              Уже более 16 лет занимаемся диагностикой, обслуживанием и восстановлением вариаторов CVT автомобилей абсолютно всех марок авто. Перед ремонтом проводим диагностику и дефектовку, показываем состояние деталей, согласуем перечень работ и стоимость, а также выполняем:
             </p>
-            <p>
-              Благодаря отлаженной логистике запчастей и современному оборудованию
-              средний срок работ «под ключ» составляет всего 2–3 дня. Прозрачная
-              смета, точная диагностика и официальная гарантия до 2 лет обеспечили
-              нам 96% рекомендаций от клиентов.
-            </p>
-            <a className="textLink" href="#diagnostic-form">
-              Записаться на бесплатную проверку <span>→</span>
+            <ul className="aboutList">
+              <li>Диагностика механической части, гидроблока и электроники</li>
+              <li>Фото- и видеоотчёт по дефектовке</li>
+              <li>Согласование стоимости до начала ремонта</li>
+              <li>Гарантия на выполненные работы и установленные запчасти</li>
+            </ul>
+            <a className="aboutCtaButton" href="#diagnostic-form">
+              Записаться на диагностику <span>→</span>
             </a>
           </div>
 
           <figure className="aboutPhoto">
-            <img src="/about-workshop-real.jpg" alt="Механик ремонтирует трансмиссию в мастерской" />
+            <img src="/service-diagnostic.webp" alt="Специалист проводит диагностику вариатора" />
             <figcaption>Специализация — только CVT</figcaption>
           </figure>
 
@@ -253,6 +242,7 @@ export default function Home() {
             <div><small>смета</small><strong>до работ</strong></div>
             <div><small>гарантия</small><strong>до 24 мес.</strong></div>
           </div>
+          <SectionCta />
         </div>
       </section>
 
@@ -284,34 +274,38 @@ export default function Home() {
             Цена зависит от модели коробки, степени износа и необходимости замены деталей.
             После диагностики фиксируем стоимость в заказ-наряде.
           </p>
+          <SectionCta />
         </div>
       </section>
 
       <section className="process section" id="process">
-        <div className="shell processGrid">
-          <div className="processVisual">
-            <img src="/process-repair-real.jpg" alt="Мастер выполняет ремонт трансмиссии в сервисе" />
-            <div className="visualBadge"><strong>30</strong><span>минут<br />на диагностику*</span></div>
-          </div>
+        <div className="shell">
+          <div className="processGrid">
+            <div className="processVisual">
+              <img src="/process-repair-real.jpg" alt="Мастер непосредственно ремонтирует вариатор в сервисе" />
+              <div className="visualBadge"><strong>30</strong><span>минут<br />на диагностику*</span></div>
+            </div>
 
-          <div className="processContent">
-            <div className="sectionHeading">
-              <p className="eyebrow">как мы работаем</p>
-              <h2>Понятный ремонт<br /><span>без сюрпризов</span></h2>
-            </div>
-            <div className="processList">
-              {process.map(([number, title, text]) => (
-                <div className="processStep" key={number}>
-                  <span>{number}</span>
-                  <div><h3>{title}</h3><p>{text}</p></div>
-                </div>
-              ))}
+            <div className="processContent">
+              <div className="sectionHeading">
+                <p className="eyebrow">как мы работаем</p>
+                <h2>Понятный ремонт<br /><span>без сюрпризов</span></h2>
+              </div>
+              <div className="processList">
+                {process.map(([number, title, text]) => (
+                  <div className="processStep" key={number}>
+                    <span>{number}</span>
+                    <div><h3>{title}</h3><p>{text}</p></div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+          <SectionCta />
         </div>
       </section>
 
-      <section className="brands section" id="advantages">
+      <section className="brands section" id="brands">
         <div className="shell">
           <div className="splitHeading compact">
             <div className="sectionHeading">
@@ -327,26 +321,30 @@ export default function Home() {
               </figure>
             ))}
           </div>
+          <SectionCta />
         </div>
       </section>
 
-      <section className="guarantee section">
-        <div className="shell guaranteeCard">
-          <div className="guaranteeLead">
-            <p className="eyebrow">гарантия</p>
-            <h2>Отвечаем за<br />результат ремонта</h2>
-            <p>
-              Условия гарантии заранее прописываем в документах — срок зависит
-              от выполненных работ и установленных деталей.
-            </p>
-            <a className="lightButton" href="#diagnostic-form">Записаться на диагностику <span>→</span></a>
+      <section className="guarantee section" id="guarantee">
+        <div className="shell">
+          <div className="guaranteeCard">
+            <div className="guaranteeLead">
+              <p className="eyebrow">гарантия</p>
+              <h2>Отвечаем за<br />результат ремонта</h2>
+              <p>
+                Условия гарантии заранее прописываем в документах — срок зависит
+                от выполненных работ и установленных деталей.
+              </p>
+              <a className="lightButton" href="#diagnostic-form">БЕСПЛАТНАЯ КОНСУЛЬТАЦИЯ <span>→</span></a>
+            </div>
+            <div className="guaranteeBenefits">
+              <article><span>01</span><strong>до 24 месяцев</strong><p>На выполненные работы и восстановленные узлы вариатора.</p></article>
+              <article><span>02</span><strong>на запчасти</strong><p>Подтверждаем происхождение деталей и фиксируем их в заказ-наряде.</p></article>
+              <article><span>03</span><strong>всё официально</strong><p>Вы получаете договор, акт выполненных работ и понятные условия.</p></article>
+              <div className="guaranteeNote"><b>✓</b><span><strong>Стоимость и гарантия фиксируются до ремонта</strong><small>Никаких устных обещаний и неожиданных доплат после выдачи автомобиля.</small></span></div>
+            </div>
           </div>
-          <div className="guaranteeBenefits">
-            <article><span>01</span><strong>до 24 месяцев</strong><p>На выполненные работы и восстановленные узлы вариатора.</p></article>
-            <article><span>02</span><strong>на запчасти</strong><p>Подтверждаем происхождение деталей и фиксируем их в заказ-наряде.</p></article>
-            <article><span>03</span><strong>всё официально</strong><p>Вы получаете договор, акт выполненных работ и понятные условия.</p></article>
-            <div className="guaranteeNote"><b>✓</b><span><strong>Стоимость и гарантия фиксируются до ремонта</strong><small>Никаких устных обещаний и неожиданных доплат после выдачи автомобиля.</small></span></div>
-          </div>
+          <SectionCta />
         </div>
       </section>
 
@@ -360,7 +358,7 @@ export default function Home() {
             <p>Здесь вы можете ознакомиться с отзывами о нашей работе.</p>
           </div>
           <div className="reviewGrid">
-            {reviews.map((review) => (
+            {reviews.slice(0, 3).map((review) => (
               <article className="reviewCard" key={review.name}>
                 <div className="stars" aria-label="5 из 5">★★★★★</div>
                 <p>«{review.text}»</p>
@@ -368,6 +366,7 @@ export default function Home() {
               </article>
             ))}
           </div>
+          <SectionCta />
         </div>
       </section>
 
@@ -382,43 +381,31 @@ export default function Home() {
                 Наши мастера регулярно повышают квалификацию и знают устройство
                 новейших автомобилей.
               </p>
-              <a className="bigPhone" href="tel:+79156442641">+7 (915) 644-26-41</a>
+              <a className="bigPhone" href={contacts.phoneHref}>{contacts.phoneDisplay}</a>
               <div className="contactRows">
-                <div><small>Адрес сервиса</small><strong>Москва, Обручева 52с13</strong></div>
+                <div><small>Адрес сервиса</small><strong>{contacts.address}</strong></div>
                 <div><small>Часы работы</small><strong>Пн–Вс: 08:00–21:00</strong></div>
-                <div className="contactEmail"><small>Почта</small><a href="mailto:servise@remontvariatora1.ru">servise@remontvariatora1.ru</a></div>
+                <div className="contactEmail"><small>Почта</small><a href={contacts.emailHref}>{contacts.email}</a></div>
               </div>
             </div>
 
-            <form
-              className="contactForm"
-              action="mailto:servise@remontvariatora1.ru"
-              method="post"
-              encType="text/plain"
-            >
-              <span>Бесплатная консультация</span>
-              <h3>Опишите проблему — мастер свяжется с вами</h3>
-              <label>Ваше имя<input name="Имя" type="text" placeholder="Имя" required /></label>
-              <label>Телефон<input name="Телефон" type="tel" placeholder="+7 (___) ___-__-__" required /></label>
-              <label>Сообщение<textarea name="Сообщение" placeholder="Марка автомобиля и симптомы" rows={4} /></label>
-              <button type="submit">Отправить заявку <span>→</span></button>
-              <small>Нажимая на кнопку, вы соглашаетесь с политикой конфиденциальности.</small>
-            </form>
+            <LeadForm variant="contact" />
           </div>
 
           <div className="mapCard">
             <div className="mapCaption">
               <span>Как нас найти</span>
-              <strong>Москва, Обручева 52с13</strong>
-              <a href="https://yandex.ru/maps/?text=Москва%2C%20Обручева%2052с13" target="_blank" rel="noreferrer">Построить маршрут →</a>
+              <strong>{contacts.address}</strong>
+              <a href={`https://yandex.ru/maps/?text=${mapQuery}`} target="_blank" rel="noopener noreferrer">Построить маршрут →</a>
             </div>
             <iframe
-              src="https://yandex.ru/map-widget/v1/?text=Москва%2C%20Обручева%2052с13&z=16"
-              title="Интерактивная карта — Москва, Обручева 52с13"
+              src={`https://yandex.ru/map-widget/v1/?text=${mapQuery}&z=16`}
+              title={`Интерактивная карта — ${contacts.address}`}
               loading="lazy"
               allowFullScreen
             />
           </div>
+          <SectionCta />
         </div>
       </section>
 
@@ -435,23 +422,24 @@ export default function Home() {
             <a href="#about">О нас</a>
             <a href="#services">Услуги</a>
             <a href="#process">Как мы работаем</a>
+            <a href="#guarantee">Гарантия</a>
             <a href="#reviews">Отзывы</a>
             <a href="#contacts">Контакты</a>
           </nav>
 
           <div className="footerContacts">
             <strong>Контакты</strong>
-            <a className="footerPhone" href="tel:+79156442641">+7 (915) 644-26-41</a>
-            <span>Москва, Обручева 52с13</span>
+            <a className="footerPhone" href={contacts.phoneHref}>{contacts.phoneDisplay}</a>
+            <span>{contacts.address}</span>
             <span>Пн–Вс: 08:00–21:00</span>
-            <a href="mailto:servise@remontvariatora1.ru">servise@remontvariatora1.ru</a>
+            <a href={contacts.emailHref}>{contacts.email}</a>
           </div>
 
           <div className="footerBottom"><small>© 2026 CVT Сервис. Все права защищены.</small><small>Политика конфиденциальности · Политика обработки cookie</small></div>
         </div>
       </footer>
 
-      <a className="floatingCall" href="tel:+79156442641" aria-label="Позвонить мастеру">☎</a>
+      <a className="floatingCall" href={contacts.phoneHref} aria-label="Позвонить мастеру">☎</a>
     </main>
   );
 }
