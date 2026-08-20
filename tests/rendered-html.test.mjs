@@ -76,7 +76,8 @@ test("keeps the client content and local visual assets wired", async () => {
   assert.match(page, /https:\/\/wa\.me\/79014037963/);
   assert.match(page, /https:\/\/web\.max\.ru/);
   assert.match(page, /href="#guarantee"/);
-  assert.match(page, /reviews\.slice\(0, 3\)/);
+  assert.match(page, /reviews\.map\(\(review\)/);
+  assert.doesNotMatch(page, /Георгий Беляев|Александр Моисеев|Захар Мельников/);
   assert.doesNotMatch(page, /Обручева|servise@remontvariatora1\.ru|mailto:servise/);
   assert.match(leadForm, /NEXT_PUBLIC_LEAD_FORM_ENDPOINT/);
   assert.match(leadForm, /fetch\(endpoint/);
