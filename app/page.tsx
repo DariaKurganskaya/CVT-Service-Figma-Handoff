@@ -12,6 +12,12 @@ const contacts = {
 
 const mapQuery = encodeURIComponent(contacts.mapText);
 
+// Замените эти пути на адреса юридических страниц после переноса сайта на Tilda.
+const legalLinks = {
+  privacy: "/privacy-policy",
+  cookies: "/cookie-policy",
+} as const;
+
 const stats = [
   { value: "16+", label: "лет специализации" },
   { value: "8 500+", label: "восстановленных CVT" },
@@ -119,10 +125,6 @@ function SocialLinks({ className }: { className: string }) {
 function SectionCta() {
   return (
     <div className="sectionCta">
-      <div>
-        <strong>Бесплатная консультация</strong>
-        <span>Записаться на бесплатную проверку</span>
-      </div>
       <a href="#diagnostic-form">Бесплатная консультация <span>→</span></a>
     </div>
   );
@@ -227,7 +229,6 @@ export default function Home() {
             <div><small>смета</small><strong>до работ</strong></div>
             <div><small>гарантия</small><strong>до 24 мес.</strong></div>
           </div>
-          <SectionCta />
         </div>
       </section>
 
@@ -329,7 +330,6 @@ export default function Home() {
               <div className="guaranteeNote"><b>✓</b><span><strong>Стоимость и гарантия фиксируются до ремонта</strong><small>Никаких устных обещаний и неожиданных доплат после выдачи автомобиля.</small></span></div>
             </div>
           </div>
-          <SectionCta />
         </div>
       </section>
 
@@ -390,7 +390,6 @@ export default function Home() {
               allowFullScreen
             />
           </div>
-          <SectionCta />
         </div>
       </section>
 
@@ -420,7 +419,14 @@ export default function Home() {
             <a href={contacts.emailHref}>{contacts.email}</a>
           </div>
 
-          <div className="footerBottom"><small>© 2026 CVT Сервис. Все права защищены.</small><small>Политика конфиденциальности · Политика обработки cookie</small></div>
+          <div className="footerBottom">
+            <small>© 2026 CVT Сервис. Все права защищены.</small>
+            <small>
+              <a href={legalLinks.privacy}>Политика конфиденциальности</a>
+              <span aria-hidden="true"> · </span>
+              <a href={legalLinks.cookies}>Политика обработки cookie</a>
+            </small>
+          </div>
         </div>
       </footer>
 
