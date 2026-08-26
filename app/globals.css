@@ -813,4 +813,3 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .headerSocials { grid-area: social; width: 100%; justify-content: center; }
   .mobileMenu nav { width: calc(100vw - 28px); }
 }
-     815 app/globals.css
