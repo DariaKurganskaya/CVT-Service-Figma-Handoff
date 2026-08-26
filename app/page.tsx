@@ -1,4 +1,5 @@
 import { LeadForm } from "./lead-form";
+import { legalLinks } from "./legal-data";
 import { MobileMenu } from "./mobile-menu";
 
 const contacts = {
@@ -11,12 +12,6 @@ const contacts = {
 };
 
 const mapQuery = encodeURIComponent(contacts.mapText);
-
-// Замените эти пути на адреса юридических страниц после переноса сайта на Tilda.
-const legalLinks = {
-  privacy: "/privacy-policy",
-  cookies: "/cookie-policy",
-} as const;
 
 const stats = [
   { value: "16+", label: "лет специализации" },
@@ -423,6 +418,8 @@ export default function Home() {
             <small>© 2026 CVT Сервис. Все права защищены.</small>
             <small>
               <a href={legalLinks.privacy}>Политика конфиденциальности</a>
+              <span aria-hidden="true"> · </span>
+              <a href={legalLinks.consent}>Согласие на обработку данных</a>
               <span aria-hidden="true"> · </span>
               <a href={legalLinks.cookies}>Политика обработки cookie</a>
             </small>

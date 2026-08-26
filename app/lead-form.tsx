@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent } from "react";
+import { legalLinks } from "./legal-data";
 
 type LeadFormProps = {
   variant: "hero" | "contact";
@@ -41,7 +42,9 @@ export function LeadForm({ variant }: LeadFormProps) {
           </label>
           <button type="submit">Записаться</button>
         </div>
-        <p className="formConsent">Нажимая на кнопку, вы подтверждаете согласие с политикой конфиденциальности.</p>
+        <p className="formConsent">
+          Нажимая на кнопку, вы подтверждаете согласие с <a href={legalLinks.privacy}>политикой обработки персональных данных</a> и <a href={legalLinks.consent}>согласием на обработку персональных данных</a>.
+        </p>
       </form>
     );
   }
@@ -71,7 +74,9 @@ export function LeadForm({ variant }: LeadFormProps) {
         <textarea name="message" placeholder="Марка автомобиля и симптомы" rows={4} />
       </label>
       <button type="submit">Бесплатная консультация <span>→</span></button>
-      <small>Нажимая на кнопку, вы соглашаетесь с политикой конфиденциальности.</small>
+      <small>
+        Нажимая на кнопку, вы подтверждаете согласие с <a href={legalLinks.privacy}>политикой обработки персональных данных</a> и <a href={legalLinks.consent}>согласием на обработку персональных данных</a>.
+      </small>
     </form>
   );
 }
