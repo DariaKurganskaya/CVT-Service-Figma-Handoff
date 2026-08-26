@@ -498,3 +498,319 @@ img { display: block; max-width: 100%; }
     min-height: 0;
     padding: 0 8px 15px;
     border: 0;
+    border-bottom: 2px solid var(--red);
+    border-radius: 0;
+    background: transparent;
+    color: rgba(255,255,255,.88);
+    text-align: center;
+    line-height: 1.35;
+  }
+  .headerMeta .headerAddress, .headerMeta .headerHours { font-size: 0; }
+  .headerMeta .headerAddress strong, .headerMeta .headerAddress br,
+  .headerMeta .headerHours br { display: none; }
+  .headerMeta .headerAddress::after { content: "г. Москва, Ступинский проезд 5 стр. 6"; font-size: 14px; font-weight: 500; }
+  .headerMeta .headerHours::after { content: "Пн–Вс: с 08:00 до 21:00"; font-size: 14px; font-weight: 500; }
+  .headerMeta span:last-child { display: block; }
+  .headerSocials { grid-area: social; display: flex; align-items: center; justify-content: center; gap: 13px; }
+  .headerSocials a { width: 47px; min-width: 47px; height: 44px; border-radius: 0; opacity: .78; }
+  .headerSocials img { width: 35px; height: 35px; }
+  .mobileMenu { position: absolute; top: 20px; right: 0; display: block; }
+  .mobileMenu summary { width: fit-content; padding: 9px 11px; border: 1px solid rgba(255,255,255,.12); border-radius: 11px; color: rgba(255,255,255,.68); background: rgba(8,8,8,.38); font-size: 0; font-weight: 800; letter-spacing: .7px; text-transform: uppercase; cursor: pointer; list-style: none; }
+  .mobileMenu summary::before { content: "☰"; color: var(--red); font-size: 12px; }
+  .mobileMenu summary::-webkit-details-marker { display: none; }
+  .mobileMenu nav { position: absolute; z-index: 8; top: 100%; right: 0; left: auto; display: grid; grid-template-columns: 1fr 1fr; width: calc(100vw - 28px); gap: 1px; margin-top: 9px; padding: 8px; border: 1px solid rgba(255,255,255,.1); border-radius: 14px; background: rgba(14,14,14,.96); box-shadow: 0 18px 34px rgba(0,0,0,.34); font-size: 9px; font-weight: 700; text-transform: uppercase; }
+  .mobileMenu nav a { padding: 12px; border-radius: 9px; background: rgba(255,255,255,.035); }
+  .heroContent { min-height: 0; padding-top: 105px; padding-bottom: 42px; }
+  .heroCard, .diagnosticForm, .heroStats { position: relative; inset: auto; width: 100%; }
+  .heroCard { min-height: 0; padding: 34px 23px 37px 20px; border: 1px solid rgba(255,255,255,.76); border-radius: 23px; background: rgba(249,248,246,.97); box-shadow: 0 24px 60px rgba(0,0,0,.36); backdrop-filter: blur(10px); }
+  .heroCard .eyebrow { margin-bottom: 18px; }
+  .heroCard h1 { font-size: 34px; letter-spacing: -1.4px; }
+  .heroCard h2 { font-size: 14px; }
+  .diagnosticForm { margin-top: 16px; padding: 26px 21px; border: 1px solid rgba(255,255,255,.11); box-shadow: 0 20px 46px rgba(0,0,0,.3); }
+  .formTitle { align-items: flex-start; flex-direction: column; gap: 6px; }
+  .formTitle strong { order: 0; }
+  .formFields { grid-template-columns: 1fr; }
+  .heroStats { display: grid; grid-template-columns: 1fr 1fr; width: calc(100% - 14px); margin: 16px 7px 0; padding: 5px; gap: 5px; border: 1px solid rgba(255,255,255,.11); border-radius: 19px; background: rgba(12,12,12,.74); box-shadow: 0 18px 38px rgba(0,0,0,.26); }
+  .stat { min-height: 82px; padding: 16px 14px; border: 0; border-radius: 13px; background: rgba(255,255,255,.055); }
+  .stat:first-child { border-left: 2px solid var(--red); }
+  .stat strong { font-size: 21px; }
+  .stat span { max-width: 118px; font-size: 7px; }
+  .sectionNav { display: none; }
+  .aboutGrid, .processGrid, .contactGrid { grid-template-columns: 1fr; gap: 42px; }
+  .aboutCopy { padding-top: 0; }
+  .aboutPhoto { grid-column: auto; min-height: 330px; }
+  .metricRail { grid-template-columns: 1fr 1fr; }
+  .splitHeading { grid-template-columns: 1fr; gap: 25px; margin-bottom: 35px; }
+  .serviceGrid { grid-template-columns: 1fr; }
+  .serviceItem { min-height: 225px; }
+  .serviceItemWide { grid-column: auto; min-height: 225px; padding-right: 28px; }
+  .processVisual { min-height: 500px; }
+  .processList { grid-template-columns: 1fr; }
+  .processStep:last-child { grid-column: auto; min-height: 155px; }
+  .brandGrid { grid-template-columns: repeat(3, 1fr); }
+  .brandGrid figure { min-height: 105px; padding: 13px; }
+  .brandGrid img { width: 67px; height: 67px; }
+  .guaranteeCard { width: 100%; padding: 62px 26px; gap: 42px; }
+  .guaranteeBenefits { grid-template-columns: 1fr; }
+  .guaranteeBenefits article { min-height: 185px; }
+  .reviewGrid { grid-template-columns: 1fr; }
+  .reviewCard { min-height: 260px; }
+  .reviewCard > p { min-height: 0; }
+  .contactRows { grid-template-columns: 1fr; }
+  .contactRows .contactEmail { grid-column: auto; grid-template-columns: 1fr; gap: 8px; min-height: 96px; }
+  .mapCard { grid-template-columns: 1fr; min-height: 0; }
+  .mapCaption { padding: 31px; }
+  .mapCaption::after { top: 31px; left: 31px; }
+  .mapCard iframe { min-height: 370px; }
+  .footer { padding: 48px 0 22px; border-radius: 26px 26px 0 0; background: radial-gradient(circle at 10% 0%, rgba(239,48,43,.13), transparent 34%), #0d0d0d; }
+  .footerInner { grid-template-columns: 1fr; gap: 0; }
+  .footerAbout { padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,.09); }
+  .footerBrand { width: 218px; }
+  .footerAbout > p { margin: 16px 0 13px; }
+  .footerSocials { gap: 8px; }
+  .footerSocials a { width: 42px; height: 42px; }
+  .footerSocials img { width: 31px; height: 31px; }
+  .footerMenu { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; padding: 24px 0; border-bottom: 1px solid rgba(255,255,255,.09); }
+  .footerMenu > strong { flex-basis: 100%; margin-bottom: 4px; }
+  .footerMenu a { padding: 10px 11px; border: 1px solid rgba(255,255,255,.07); border-radius: 10px; background: rgba(255,255,255,.035); font-size: 8px; }
+  .footerContacts { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; gap: 9px; padding: 25px 0 5px; }
+  .footerContacts > strong, .footerContacts .footerPhone, .footerContacts > a:not(.footerPhone) { grid-column: 1 / -1; }
+  .footerContacts > strong { margin-bottom: 4px; }
+  .footerContacts .footerPhone { margin: 0; padding: 17px; border-radius: 14px; background: linear-gradient(115deg, rgba(239,48,43,.24), rgba(255,255,255,.035)); font-size: 21px; }
+  .footerContacts > span, .footerContacts > a:not(.footerPhone) { min-height: 58px; padding: 13px; border: 1px solid rgba(255,255,255,.07); border-radius: 12px; background: rgba(255,255,255,.03); }
+  .footerBottom { grid-column: auto; flex-direction: column; gap: 8px; margin-top: 21px; padding-top: 19px; }
+  .footerBottom small { line-height: 1.55; }
+}
+
+@media (max-width: 430px) {
+  .sectionHeading h2, .contactInfo h2 { font-size: 38px; letter-spacing: -1.8px; }
+  .hero { min-height: 0; }
+  .heroCard h1 { font-size: 31px; }
+  .metricRail, .brandGrid { grid-template-columns: 1fr 1fr; }
+  .processVisual { min-height: 410px; }
+  .bigPhone { font-size: 27px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* Client-requested content and responsive refinements. */
+.hero { min-height: 968px; }
+.heroContent { min-height: 832px; }
+.heroCard { width: 680px; min-height: 488px; }
+.heroCard h1 { font-size: clamp(34px, 2.75vw, 38px); }
+.heroCard h2 { max-width: 535px; }
+.diagnosticForm { top: 500px; }
+.heroStats { bottom: 0; }
+
+.leadForm button:disabled { cursor: wait; opacity: .72; }
+.formFeedback { display: none; margin: 10px 0 0; font-size: 9px; font-weight: 600; line-height: 1.45; }
+.formFeedback.success, .formFeedback.error { display: block; }
+.formFeedback.success { color: #c9ffd0; }
+.formFeedback.error { color: #ffb7b4; }
+.contactForm .formFeedback.success { color: #247331; }
+.contactForm .formFeedback.error { color: #b42620; }
+
+.aboutList { display: grid; gap: 10px; margin: 23px 0 22px; padding: 0; list-style: none; }
+.aboutList li { position: relative; padding-left: 19px; color: rgba(255,255,255,.76); font-size: 12px; line-height: 1.55; }
+.aboutList li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--red); font-weight: 900; }
+.aboutCtaButton, .sectionCta > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  min-height: 52px;
+  padding: 0 22px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #f13a35, #b31f1c);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  box-shadow: 0 12px 28px rgba(239,48,43,.2);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.aboutCtaButton span, .sectionCta > a span { font-size: 18px; line-height: 1; }
+.aboutCtaButton {
+  width: 270px;
+  min-width: 0;
+  max-width: 100%;
+  gap: 17px;
+  padding: 0 20px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.sectionCta {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-top: 28px;
+  padding-top: 24px;
+  padding-bottom: 0;
+  border-top: 1px solid rgba(255,255,255,.16);
+}
+.process .sectionCta { border-color: rgba(23,23,23,.2); }
+.section:has(.sectionCta) { padding-bottom: 44px; }
+.sectionCta > a {
+  flex: 0 0 auto;
+  width: 275px;
+  min-height: 50px;
+  gap: 18px;
+  padding: 0 20px;
+  font-size: 11px;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(239,48,43,.16);
+}
+
+.brandGrid img { filter: grayscale(1) invert(1) brightness(1.2) contrast(.82); }
+.brandGrid figure:hover img { filter: grayscale(.12) brightness(1.25) contrast(.9); }
+
+.lightButton { background: linear-gradient(145deg, #f13a35, #b31f1c); color: white; }
+.lightButton span { color: white; }
+.lightButton {
+  width: 270px;
+  min-width: 0;
+  max-width: 100%;
+  gap: 17px;
+  padding: 0 20px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .aboutCtaButton:hover, .sectionCta > a:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(239,48,43,.3); }
+  .sectionCta > a:hover { box-shadow: 0 12px 24px rgba(239,48,43,.24); }
+}
+
+@media (max-width: 800px) {
+  .hero { min-height: 0; }
+  .heroContent { min-height: 0; }
+  .heroCard { width: 100%; min-height: 0; align-items: stretch; }
+  .heroCard h1 {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    font-size: clamp(19px, 6vw, 25px);
+    line-height: 1;
+    letter-spacing: -1.1px;
+  }
+  .heroCard h2 { margin-top: 22px; font-size: 15px; line-height: 1.32; }
+  .heroCard > p:last-child { color: #666; font-size: 14px; line-height: 1.55; }
+  .diagnosticForm { top: auto; }
+  .diagnosticForm input { height: 50px; font-size: 13px; }
+  .diagnosticForm label span, .formTitle span { font-size: 9px; }
+  .diagnosticForm button { min-height: 50px; font-size: 11px; }
+  .formConsent { font-size: 9px; line-height: 1.45; }
+  .formFeedback { font-size: 11px; }
+
+  .headerMeta .headerAddress::after { content: "г. Москва, Ступинский проезд 5 стр. 6"; font-size: 14px; font-weight: 500; }
+  .mobileMenu { right: 0; }
+  .mobileMenu nav {
+    grid-template-columns: 1fr;
+    width: min(calc(100vw - 28px), 330px);
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    font-size: 10px;
+  }
+  .mobileMenu nav a { min-height: 44px; padding: 13px 14px; line-height: 1.3; }
+
+  .aboutCopy .largeCopy { color: rgba(255,255,255,.96); font-size: 16px; line-height: 1.55; }
+  .aboutList { gap: 12px; margin: 24px 0; }
+  .aboutList li { color: rgba(255,255,255,.82); font-size: 15px; line-height: 1.5; }
+  .aboutCtaButton, .lightButton {
+    width: 100%;
+    min-width: 0;
+    gap: 17px;
+    padding: 0 20px;
+    font-size: 11px;
+  }
+
+  .sectionHeading, .sectionHeading h2 { width: 100%; max-width: 100%; min-width: 0; }
+  .sectionHeading h2 {
+    font-size: clamp(29px, 8.7vw, 36px);
+    letter-spacing: -1.6px;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .serviceItem { min-height: 238px; }
+  .serviceItem h3 { max-width: 270px; font-size: 20px; }
+  .serviceItem p { color: rgba(255,255,255,.72); font-size: 14px; line-height: 1.55; }
+  .serviceItemWide { min-height: 238px; }
+  .finePrint { font-size: 11px; line-height: 1.6; }
+
+  .processStep h3 { font-size: 16px; }
+  .processStep p { font-size: 13px; line-height: 1.55; }
+  .visualBadge { min-width: 205px; padding: 21px; }
+  .visualBadge strong { font-size: 42px; }
+
+  .section:has(.sectionCta) { padding-bottom: 38px; }
+  .sectionCta { align-items: stretch; margin-top: 24px; padding-top: 22px; }
+  .sectionCta > a { width: 100%; min-height: 50px; font-size: 11px; }
+
+  .contactRows small { font-size: 10px; }
+  .contactRows strong, .contactRows a { font-size: 14px; }
+  .contactForm label { font-size: 11px; }
+  .contactForm input, .contactForm textarea { font-size: 14px; }
+  .contactForm button { font-size: 11px; }
+  .contactForm > small { font-size: 9px; line-height: 1.5; }
+  .mapCaption strong { font-size: 17px; }
+  .mapCaption a { font-size: 10px; }
+  .footerMenu a { font-size: 9px; }
+}
+
+/* Keep the approved desktop composition intact while matching the mobile-only
+   typography and header layout used by the autonomous export. */
+@media (max-width: 800px) {
+  .serviceItem p { color: rgba(255,255,255,.84); font-size: 16px; line-height: 1.58; }
+  .finePrint { color: rgba(255,255,255,.76); font-size: 12px; line-height: 1.62; }
+
+  .processStep p { color: #5f5f5f; font-size: 15px; line-height: 1.58; }
+
+  .guaranteeLead > p:not(.eyebrow) { color: rgba(255,255,255,.82); font-size: 16px; line-height: 1.58; }
+  .guaranteeBenefits article strong { font-size: 15px; }
+  .guaranteeBenefits article p { color: rgba(255,255,255,.78); font-size: 14px; line-height: 1.58; }
+  .guaranteeNote strong { font-size: 13px; line-height: 1.35; }
+  .guaranteeNote small { color: rgba(255,255,255,.86); font-size: 12px; line-height: 1.48; }
+
+  .reviewCard > p { color: rgba(255,255,255,.82); font-size: 16px; line-height: 1.6; }
+  .reviewCard:nth-child(2) > p { color: rgba(255,255,255,.92); }
+  .reviewCard footer strong { font-size: 13px; }
+  .reviewCard footer span { color: rgba(255,255,255,.62); font-size: 12px; }
+
+  .footerAbout > p { font-size: 11px; line-height: 1.62; }
+  .footerMenu > strong, .footerContacts > strong { font-size: 11px; }
+  .footerMenu a { font-size: 11px; line-height: 1.35; }
+  .footerContacts > span, .footerContacts > a:not(.footerPhone) { font-size: 12px; line-height: 1.55; }
+  .footerBottom small { font-size: 10px; line-height: 1.55; }
+}
+
+@media (max-width: 400px) {
+  .siteHeader {
+    grid-template-areas:
+      "brand menu"
+      "phone phone"
+      "meta meta"
+      "social social";
+    grid-template-columns: minmax(0, 1fr) 44px;
+    grid-template-rows: auto auto auto auto;
+    column-gap: 12px;
+    row-gap: 20px;
+    justify-items: stretch;
+  }
+  .brand { grid-area: brand; width: min(100%, 292px); justify-self: start; }
+  .mobileMenu { position: relative; top: auto; right: auto; grid-area: menu; width: 44px; justify-self: end; align-self: start; }
+  .headerPhone { grid-area: phone; justify-self: center; }
+  .headerMeta { grid-area: meta; width: 100%; justify-self: stretch; }
+  .headerSocials { grid-area: social; width: 100%; justify-content: center; }
+  .mobileMenu nav { width: calc(100vw - 28px); }
+}
+     815 app/globals.css
