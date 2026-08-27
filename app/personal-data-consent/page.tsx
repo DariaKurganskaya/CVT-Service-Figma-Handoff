@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { LegalPage } from "../legal-page";
-import { legalClientDataRequired, legalLinks, legalSiteData } from "../legal-data";
+import { legalLinks, legalOperatorData, siteData } from "../legal-data";
 
 export default function PersonalDataConsentPage() {
   return (
     <LegalPage title="Согласие на обработку персональных данных">
-      <p>Направляя форму на сайте {legalSiteData.domain}, пользователь подтверждает согласие на обработку персональных данных на условиях этого документа. Документ является рабочей версией и требует уточнения реквизитов оператора от клиента.</p>
+      <p>Направляя форму на сайте {siteData.domain}, пользователь подтверждает согласие на обработку персональных данных на условиях этого документа.</p>
 
       <h2>1. Оператор</h2>
-      <p>Оператор персональных данных: <strong>{legalClientDataRequired.operator}</strong>. Контакт для обращений по персональным данным: <strong>{legalClientDataRequired.personalDataEmail}</strong>.</p>
+      <p>Оператор персональных данных: <strong>{legalOperatorData.name}</strong>, ИНН {legalOperatorData.inn}, ОГРН {legalOperatorData.ogrn} от {legalOperatorData.ogrnAssignedAt}. Юридический адрес: {legalOperatorData.legalAddress}. Контакт для обращений по персональным данным: <a href={siteData.contacts.emailHref}>{legalOperatorData.personalDataEmail}</a>.</p>
 
       <h2>2. Состав данных</h2>
       <p>Пользователь разрешает обработку следующих данных, которые вводит в форме:</p>
@@ -29,7 +29,7 @@ export default function PersonalDataConsentPage() {
       <p>Пользователь разрешает получать, записывать, систематизировать, хранить, уточнять, использовать, передавать уполномоченным получателям заявки и удалять свои данные. Действия выполняются в объёме, необходимом для указанных целей.</p>
 
       <h2>5. Срок и отзыв согласия</h2>
-      <p>Согласие действует до достижения целей обработки либо до его отзыва пользователем, если иной срок не будет установлен оператором в окончательной редакции документов. Отозвать согласие можно обращением на утверждённый оператором адрес для персональных данных. До его утверждения — на <a href={`mailto:${legalSiteData.email}`}>{legalSiteData.email}</a>.</p>
+      <p>Согласие действует до достижения целей обработки либо до его отзыва пользователем, если иной срок не будет установлен оператором в окончательной редакции документов. Отозвать согласие можно обращением на <a href={siteData.contacts.emailHref}>{legalOperatorData.personalDataEmail}</a>.</p>
 
       <h2>6. Связанные документы</h2>
       <p>Перед направлением формы рекомендуем ознакомиться с <Link href={legalLinks.privacy}>политикой обработки персональных данных</Link>. Использование cookie и внешних сервисов регулируется отдельной <Link href={legalLinks.cookies}>политикой cookie</Link>.</p>

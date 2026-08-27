@@ -117,6 +117,15 @@ img { display: block; max-width: 100%; }
   opacity: .7;
   transition: transform .25s ease, opacity .25s ease;
 }
+.headerSocials .messengerMax {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  min-width: 46px;
+  height: 46px;
+  opacity: .7;
+}
+.headerSocials .messengerMax img { width: 35px; height: 35px; object-fit: contain; filter: saturate(.66) contrast(.9); }
 .headerSocials a:hover { transform: translateY(-3px) scale(1.05); opacity: 1; }
 .headerSocials img { width: 35px; height: 35px; object-fit: contain; filter: saturate(.66) contrast(.9); }
 .mobileMenu { display: none; }
@@ -508,7 +517,7 @@ img { display: block; max-width: 100%; }
   .headerMeta .headerAddress, .headerMeta .headerHours { font-size: 0; }
   .headerMeta .headerAddress strong, .headerMeta .headerAddress br,
   .headerMeta .headerHours br { display: none; }
-  .headerMeta .headerAddress::after { content: "г. Москва, Ступинский проезд 5 стр. 6"; font-size: 14px; font-weight: 500; }
+  .headerMeta .headerAddress::after { content: "г. Москва, Ступинский проезд, д. 5, стр. 6"; font-size: 14px; font-weight: 500; }
   .headerMeta .headerHours::after { content: "Пн–Вс: с 08:00 до 21:00"; font-size: 14px; font-weight: 500; }
   .headerMeta span:last-child { display: block; }
   .headerSocials { grid-area: social; display: flex; align-items: center; justify-content: center; gap: 13px; }
@@ -668,6 +677,16 @@ img { display: block; max-width: 100%; }
 .brandGrid img { filter: grayscale(1) invert(1) brightness(1.2) contrast(.82); }
 .brandGrid figure:hover img { filter: grayscale(.12) brightness(1.25) contrast(.9); }
 
+/* Light logo cards preserve the original brand marks on a dark section. */
+.brandGrid figure { border-color: rgba(255,255,255,.22); background: #f5f3f0; }
+.brandGrid figure:hover { background: #fff; border-color: rgba(239,48,43,.78); }
+.brandGrid img, .brandGrid figure:hover img { filter: none; }
+
+.footerSocials .messengerMax, .footerSocials a { display: inline-flex; align-items: center; gap: 8px; width: auto; min-width: 0; height: auto; padding: 5px 0; }
+.footerSocials .messengerMax { color: rgba(255,255,255,.7); }
+.footerSocials .messengerMax img { width: 34px; height: 34px; object-fit: contain; filter: saturate(.62) contrast(.88); }
+.footerSocials span:not(.messengerMax) { font-size: 9px; line-height: 1.35; font-style: normal; text-transform: uppercase; }
+
 .lightButton { background: linear-gradient(145deg, #f13a35, #b31f1c); color: white; }
 .lightButton span { color: white; }
 .lightButton {
@@ -711,7 +730,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .formConsent { font-size: 9px; line-height: 1.45; }
   .formFeedback { font-size: 11px; }
 
-  .headerMeta .headerAddress::after { content: "г. Москва, Ступинский проезд 5 стр. 6"; font-size: 14px; font-weight: 500; }
+  .headerMeta .headerAddress::after { content: "г. Москва, Ступинский проезд, д. 5, стр. 6"; font-size: 14px; font-weight: 500; }
   .mobileMenu { right: 0; }
   .mobileMenu nav {
     grid-template-columns: 1fr;
@@ -724,7 +743,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 
   .aboutCopy .largeCopy { color: rgba(255,255,255,.96); font-size: 16px; line-height: 1.55; }
   .aboutList { gap: 12px; margin: 24px 0; }
-  .aboutList li { color: rgba(255,255,255,.82); font-size: 15px; line-height: 1.5; }
+  .aboutList li { color: rgba(255,255,255,.88); font-size: 16px; line-height: 1.55; }
   .aboutCtaButton, .lightButton {
     width: 100%;
     min-width: 0;
@@ -773,7 +792,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .serviceItem p { color: rgba(255,255,255,.84); font-size: 16px; line-height: 1.58; }
   .finePrint { color: rgba(255,255,255,.76); font-size: 12px; line-height: 1.62; }
 
-  .processStep p { color: #5f5f5f; font-size: 15px; line-height: 1.58; }
+  .processStep p { color: #4a4a4a; font-size: 16px; line-height: 1.58; }
 
   .guaranteeLead > p:not(.eyebrow) { color: rgba(255,255,255,.82); font-size: 16px; line-height: 1.58; }
   .guaranteeBenefits article strong { font-size: 15px; }
@@ -812,4 +831,11 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .headerMeta { grid-area: meta; width: 100%; justify-self: stretch; }
   .headerSocials { grid-area: social; width: 100%; justify-content: center; }
   .mobileMenu nav { width: calc(100vw - 28px); }
+}
+
+@media (max-width: 800px) {
+  .headerMeta .headerAddress::after { content: "г. Москва, Ступинский проезд, д. 5, стр. 6"; }
+  .footerSocials { align-items: flex-start; flex-wrap: wrap; }
+  .footerSocials .messengerMax, .footerSocials a { width: auto; min-width: 0; height: auto; padding: 7px 0; }
+  .footerSocials img, .footerSocials .messengerMax img { width: 29px; height: 29px; }
 }

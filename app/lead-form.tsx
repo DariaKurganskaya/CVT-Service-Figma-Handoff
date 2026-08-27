@@ -14,7 +14,7 @@ export function LeadForm({ variant }: LeadFormProps) {
 
   if (variant === "hero") {
     return (
-      <form className="diagnosticForm leadForm" id="diagnostic-form" onSubmit={handleSubmit} noValidate>
+      <form className="diagnosticForm leadForm" id="lead-form" onSubmit={handleSubmit} noValidate>
         <div className="formTitle">
           <span>Бесплатная консультация</span>
           <strong>Получите скидку 10% на ремонт</strong>

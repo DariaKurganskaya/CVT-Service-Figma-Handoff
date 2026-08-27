@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const menuItems = [
   { href: "#about", label: "О нас" },
@@ -14,13 +14,17 @@ const menuItems = [
 
 export function MobileMenu() {
   const detailsRef = useRef<HTMLDetailsElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <details className="mobileMenu" ref={detailsRef}>
-      <summary aria-label="Открыть меню">Меню</summary>
+    <details className="mobileMenu" ref={detailsRef} onToggle={(event) => setIsOpen(event.currentTarget.open)}>
+      <summary aria-label={isOpen ? "Закрыть меню" : "Открыть меню"} aria-expanded={isOpen}>Меню</summary>
       <nav aria-label="Мобильная навигация">
         {menuItems.map((item) => (
-          <a href={item.href} key={item.href} onClick={() => detailsRef.current?.removeAttribute("open")}>
+          <a href={item.href} key={item.href} onClick={() => {
+            detailsRef.current?.removeAttribute("open");
+            setIsOpen(false);
+          }}>
             {item.label}
           </a>
         ))}

@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { LegalPage } from "../legal-page";
-import { legalClientDataRequired, legalLinks, legalSiteData } from "../legal-data";
+import { legalLinks, legalOperatorData, siteData } from "../legal-data";
 
 export default function PrivacyPolicyPage() {
   return (
     <LegalPage title="Политика обработки персональных данных">
-      <p>Этот документ описывает порядок обработки персональных данных посетителей сайта {legalSiteData.domain}. Документ является рабочей версией и подлежит уточнению после предоставления клиентом обязательных реквизитов.</p>
+      <p>Этот документ описывает порядок обработки персональных данных посетителей сайта {siteData.domain}. Отдельные сведения о каналах передачи заявок, сроках хранения и внешних сервисах будут уточняться по мере их подключения.</p>
 
       <h2>1. Оператор и область действия</h2>
-      <p>Оператор персональных данных: <strong>{legalClientDataRequired.operator}</strong>.</p>
-      <p>Адрес оператора: <strong>{legalClientDataRequired.operatorAddress}</strong>. Адрес сервиса {legalSiteData.serviceAddress} указан как место оказания услуг и не заявляется юридическим адресом оператора.</p>
+      <p>Оператор персональных данных: <strong>{legalOperatorData.name}</strong>, ИНН {legalOperatorData.inn}, ОГРН {legalOperatorData.ogrn} (дата присвоения ОГРН: {legalOperatorData.ogrnAssignedAt}).</p>
+      <p>Юридический адрес оператора: <strong>{legalOperatorData.legalAddress}</strong>. Адрес сервиса {siteData.contacts.serviceAddress} указан как место оказания услуг и не является юридическим адресом оператора.</p>
       <p>Политика применяется к данным, которые пользователь передаёт через формы сайта CVT Сервис.</p>
 
       <h2>2. Какие данные обрабатываются</h2>
@@ -35,7 +35,7 @@ export default function PrivacyPolicyPage() {
 
       <h2>7. Права пользователя и отзыв согласия</h2>
       <p>Пользователь вправе запросить сведения об обработке своих данных, уточнить их, потребовать ограничить обработку или удалить данные в случаях, предусмотренных законодательством, а также отозвать согласие.</p>
-      <p>Для отзыва согласия и иных обращений используйте <strong>{legalClientDataRequired.personalDataEmail}</strong>. До его утверждения можно написать на <a href={`mailto:${legalSiteData.email}`}>{legalSiteData.email}</a>, указав тему обращения и контакт для ответа.</p>
+      <p>Для отзыва согласия и иных обращений используйте <a href={siteData.contacts.emailHref}>{legalOperatorData.personalDataEmail}</a>, указав тему обращения и контакт для ответа.</p>
 
       <h2>8. Связанные документы</h2>
       <p><Link href={legalLinks.consent}>Согласие на обработку персональных данных</Link> и <Link href={legalLinks.cookies}>политика использования cookie и внешних сервисов</Link> являются отдельными документами.</p>

@@ -1,17 +1,10 @@
 import { LeadForm } from "./lead-form";
-import { legalLinks } from "./legal-data";
+import { legalLinks, siteData } from "./legal-data";
 import { MobileMenu } from "./mobile-menu";
 
-const contacts = {
-  phoneDisplay: "+7 (950) 701-82-52",
-  phoneHref: "tel:+79507018252",
-  address: "г. Москва, Ступинский проезд 5 стр. 6",
-  email: "info@remontvariator.ru",
-  emailHref: "mailto:info@remontvariator.ru",
-  mapText: "г. Москва, Ступинский проезд 5 стр. 6",
-};
+const contacts = siteData.contacts;
 
-const mapQuery = encodeURIComponent(contacts.mapText);
+const mapQuery = encodeURIComponent(contacts.serviceAddress);
 
 const stats = [
   { value: "16+", label: "лет специализации" },
@@ -99,20 +92,21 @@ const brands = [
   { name: "Volvo", src: "/brands/volvo.png" },
 ];
 
-const socialLinks = [
-  { name: "MAX", href: "https://web.max.ru/", icon: "/social/max.png" },
-  { name: "Telegram", href: "https://t.me/inkom10", icon: "/social/telegram.png" },
-  { name: "WhatsApp", href: "https://wa.me/79014037963", icon: "/social/whatsapp.png" },
-];
-
-function SocialLinks({ className }: { className: string }) {
+function SocialLinks({ className, showDetails = false }: { className: string; showDetails?: boolean }) {
   return (
     <div className={className} aria-label="Мессенджеры">
-      {socialLinks.map((social) => (
-        <a href={social.href} aria-label={social.name} title={social.name} target="_blank" rel="noopener noreferrer" key={social.name}>
-          <img src={social.icon} alt="" aria-hidden="true" />
-        </a>
-      ))}
+      <span className="messengerMax" aria-label={`MAX: ${siteData.messengers.max.phone}`} title={`MAX: ${siteData.messengers.max.phone}`}>
+        <img src={siteData.messengers.max.icon} alt="" aria-hidden="true" />
+        {showDetails && <span>MAX<br />{siteData.messengers.max.phone}</span>}
+      </span>
+      <a href={siteData.messengers.telegram.href} aria-label={`Telegram: ${siteData.messengers.telegram.label}`} title={`Telegram: ${siteData.messengers.telegram.label}`} target="_blank" rel="noopener noreferrer">
+        <img src={siteData.messengers.telegram.icon} alt="" aria-hidden="true" />
+        {showDetails && <span>Telegram<br />{siteData.messengers.telegram.label}</span>}
+      </a>
+      <a href={siteData.messengers.whatsapp.href} aria-label={`WhatsApp: ${siteData.messengers.whatsapp.label}, ${siteData.messengers.whatsapp.phone}`} title={`WhatsApp: ${siteData.messengers.whatsapp.label}`} target="_blank" rel="noopener noreferrer">
+        <img src={siteData.messengers.whatsapp.icon} alt="" aria-hidden="true" />
+        {showDetails && <span>WhatsApp<br />{siteData.messengers.whatsapp.label}</span>}
+      </a>
     </div>
   );
 }
@@ -120,7 +114,7 @@ function SocialLinks({ className }: { className: string }) {
 function SectionCta() {
   return (
     <div className="sectionCta">
-      <a href="#diagnostic-form">Бесплатная консультация <span>→</span></a>
+      <a href="#lead-form">БЕСПЛАТНАЯ КОНСУЛЬТАЦИЯ <span>→</span></a>
     </div>
   );
 }
@@ -141,7 +135,7 @@ export default function Home() {
           </a>
 
           <div className="headerMeta">
-            <span className="headerAddress"><strong>Ступинский проезд 5 стр. 6</strong><br />Москва</span>
+            <span className="headerAddress"><strong>{contacts.serviceAddress}</strong></span>
             <span className="headerHours">Пн–Вс: с 08:00<br />до 21:00</span>
           </div>
 
@@ -152,16 +146,16 @@ export default function Home() {
         <div className="heroContent shell">
           <div className="heroCard">
             <p className="eyebrow">специализированный сервис cvt</p>
-            <h1 aria-label="Профессиональный ремонт вариаторов (CVT) авто разных марок с гарантией до 24 месяцев">
+            <h1 aria-label="Профессиональный ремонт вариаторов (CVT) автомобилей разных марок с гарантией до 24 месяцев">
               <span>Профессиональный ремонт</span>
-              <span>вариаторов (CVT) авто</span>
+              <span>вариаторов (CVT) автомобилей</span>
               <span>разных марок с гарантией</span>
               <span className="heroTitleRed">до 24 месяцев</span>
             </h1>
 
-            <h2>Бесплатно за 30 минут найдём причину неисправности*, и согласуем стоимость до начала ремонта</h2>
+            <h2>Бесплатно за 30 минут найдём причину неисправности* и согласуем стоимость до начала ремонта</h2>
             <p>
-              Ремонтируем вариаторы абсолютно всех марок авто. Показываем каждый этап работ,
+              Ремонтируем вариаторы автомобилей всех марок. Показываем каждый этап работ,
               заранее согласовываем смету и даём гарантию до 2 лет.
             </p>
           </div>
@@ -194,13 +188,13 @@ export default function Home() {
       <section className="about section" id="about">
         <div className="shell aboutGrid">
           <div className="sectionHeading">
-            <p className="eyebrow">о нас</p>
+            <p className="eyebrow">о сервисе</p>
             <h2>Мы эксперты<br />в области ремонта<br /><span>вариаторов</span></h2>
           </div>
 
           <div className="aboutCopy">
             <p className="largeCopy">
-              Уже более 16 лет занимаемся диагностикой, обслуживанием и восстановлением вариаторов CVT автомобилей абсолютно всех марок авто. Перед ремонтом проводим диагностику и дефектовку, показываем состояние деталей, согласуем перечень работ и стоимость, а также выполняем:
+              Уже более 16 лет занимаемся диагностикой, обслуживанием и восстановлением вариаторов CVT автомобилей всех марок. Перед ремонтом проводим диагностику и дефектовку, показываем состояние деталей, согласуем перечень работ и стоимость, а также выполняем:
             </p>
             <ul className="aboutList">
               <li>Диагностика механической части, гидроблока и электроники</li>
@@ -208,9 +202,6 @@ export default function Home() {
               <li>Согласование стоимости до начала ремонта</li>
               <li>Гарантия на выполненные работы и установленные запчасти</li>
             </ul>
-            <a className="aboutCtaButton" href="#diagnostic-form">
-              Записаться на диагностику <span>→</span>
-            </a>
           </div>
 
           <figure className="aboutPhoto">
@@ -224,6 +215,7 @@ export default function Home() {
             <div><small>смета</small><strong>до работ</strong></div>
             <div><small>гарантия</small><strong>до 24 мес.</strong></div>
           </div>
+          <SectionCta />
         </div>
       </section>
 
@@ -246,7 +238,7 @@ export default function Home() {
                 <span>{service.number}</span>
                 <h3>{service.title}</h3>
                 <p>{service.text}</p>
-                <a href="#diagnostic-form" aria-label={`Записаться: ${service.title}`}>→</a>
+                <a href="#lead-form" aria-label={`Бесплатная консультация: ${service.title}`}>→</a>
               </article>
             ))}
           </div>
@@ -316,7 +308,6 @@ export default function Home() {
                 Условия гарантии заранее прописываем в документах — срок зависит
                 от выполненных работ и установленных деталей.
               </p>
-              <a className="lightButton" href="#diagnostic-form">БЕСПЛАТНАЯ КОНСУЛЬТАЦИЯ <span>→</span></a>
             </div>
             <div className="guaranteeBenefits">
               <article><span>01</span><strong>до 24 месяцев</strong><p>На выполненные работы и восстановленные узлы вариатора.</p></article>
@@ -325,6 +316,7 @@ export default function Home() {
               <div className="guaranteeNote"><b>✓</b><span><strong>Стоимость и гарантия фиксируются до ремонта</strong><small>Никаких устных обещаний и неожиданных доплат после выдачи автомобиля.</small></span></div>
             </div>
           </div>
+          <SectionCta />
         </div>
       </section>
 
@@ -363,7 +355,7 @@ export default function Home() {
               </p>
               <a className="bigPhone" href={contacts.phoneHref}>{contacts.phoneDisplay}</a>
               <div className="contactRows">
-                <div><small>Адрес сервиса</small><strong>{contacts.address}</strong></div>
+                <div><small>Адрес сервиса</small><strong>{contacts.serviceAddress}</strong></div>
                 <div><small>Часы работы</small><strong>Пн–Вс: 08:00–21:00</strong></div>
                 <div className="contactEmail"><small>Почта</small><a href={contacts.emailHref}>{contacts.email}</a></div>
               </div>
@@ -375,12 +367,12 @@ export default function Home() {
           <div className="mapCard">
             <div className="mapCaption">
               <span>Как нас найти</span>
-              <strong>{contacts.address}</strong>
+              <strong>{contacts.serviceAddress}</strong>
               <a href={`https://yandex.ru/maps/?text=${mapQuery}`} target="_blank" rel="noopener noreferrer">Построить маршрут →</a>
             </div>
             <iframe
               src={`https://yandex.ru/map-widget/v1/?text=${mapQuery}&z=16`}
-              title={`Интерактивная карта — ${contacts.address}`}
+              title={`Интерактивная карта — ${contacts.serviceAddress}`}
               loading="lazy"
               allowFullScreen
             />
@@ -393,7 +385,7 @@ export default function Home() {
           <div className="footerAbout">
             <a className="footerBrand" href="#top" aria-label="CVT Сервис — наверх"><img src="/client-logo-clean.png" alt="CVT Сервис — ремонт вариаторов" /></a>
             <p>Специализированный ремонт вариаторов в Москве и области.</p>
-            <SocialLinks className="footerSocials" />
+            <SocialLinks className="footerSocials" showDetails />
           </div>
 
           <nav className="footerMenu" aria-label="Навигация в подвале">
@@ -409,7 +401,7 @@ export default function Home() {
           <div className="footerContacts">
             <strong>Контакты</strong>
             <a className="footerPhone" href={contacts.phoneHref}>{contacts.phoneDisplay}</a>
-            <span>{contacts.address}</span>
+            <span>{contacts.serviceAddress}</span>
             <span>Пн–Вс: 08:00–21:00</span>
             <a href={contacts.emailHref}>{contacts.email}</a>
           </div>
