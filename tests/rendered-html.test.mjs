@@ -76,7 +76,9 @@ test("keeps the client content and local visual assets wired", async () => {
   assert.doesNotMatch(page, /Обручева|servise@remontvariatora1\.ru|mailto:servise/);
   assert.match(leadForm, /id="lead-form"/);
   assert.match(leadForm, /event\.preventDefault\(\)/);
-  assert.doesNotMatch(leadForm, /fetch\(/);
+  assert.match(leadForm, /fetch\("\/api\/lead\.php"/);
+  assert.match(leadForm, /name="consent"/);
+  assert.match(leadForm, /disabled=\{isSending\}/);
   assert.doesNotMatch(leadForm, /mailto:|alert\(/);
   assert.match(mobileMenu, /removeAttribute\("open"\)/);
   assert.match(mobileMenu, /#guarantee/);
@@ -99,5 +101,7 @@ test("keeps the client content and local visual assets wired", async () => {
     access(out("hero-variator-real.jpg")),
     access(out("social/telegram.png")),
     access(out("brands/nissan.png")),
+    access(out("api/lead.php")),
+    access(new URL("../server/cvt-leads.example.php", import.meta.url)),
   ]);
 });
