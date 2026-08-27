@@ -42,6 +42,7 @@ export function LeadForm({ variant }: LeadFormProps) {
           message: data.get("message") ?? "",
           source: variant,
           consent: data.get("consent") === "on",
+          website: data.get("website") ?? "",
         }),
       });
 
@@ -76,6 +77,8 @@ export function LeadForm({ variant }: LeadFormProps) {
     </p>
   );
 
+  const honeypot = <input className="leadHoneypot" name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" />;
+
   if (variant === "hero") {
     return (
       <form className="diagnosticForm leadForm" id="lead-form" onSubmit={handleSubmit}>
@@ -106,6 +109,7 @@ export function LeadForm({ variant }: LeadFormProps) {
           </label>
           <button type="submit" disabled={isSending}>{buttonLabel}</button>
         </div>
+        {honeypot}
         {consent}
         {formStatus}
       </form>
@@ -136,6 +140,7 @@ export function LeadForm({ variant }: LeadFormProps) {
         Сообщение
         <textarea name="message" placeholder="Марка автомобиля и симптомы" rows={4} maxLength={1000} />
       </label>
+      {honeypot}
       {consent}
       <button type="submit" disabled={isSending}>{buttonLabel} <span>→</span></button>
       {formStatus}

@@ -216,9 +216,10 @@ img { display: block; max-width: 100%; }
   text-transform: uppercase;
 }
 .formConsent { margin: 12px 0 0; color: rgba(255,255,255,.42); font-size: 7px; }
-.leadConsent { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; color: rgba(255,255,255,.62); font-size: 8px; line-height: 1.45; text-transform: none; }
-.leadConsent input { flex: 0 0 auto; width: 14px; height: 14px; min-height: 0; margin: 1px 0 0; accent-color: var(--red); }
+.leadConsent { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; color: rgba(255,255,255,.78); font-size: 12px; line-height: 1.45; text-transform: none; }
+.leadConsent input { flex: 0 0 auto; width: 16px; height: 16px; min-height: 0; margin: 1px 0 0; accent-color: var(--red); }
 .leadConsent a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.leadHoneypot { position: absolute; left: -10000px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .heroStats {
   position: absolute;
   right: 0;
@@ -387,7 +388,7 @@ img { display: block; max-width: 100%; }
 .contactForm button { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 52px; padding: 0 18px; border: 0; border-radius: 11px; background: linear-gradient(145deg, #f13a35, #b31f1c); color: white; font-size: 11px; font-weight: 800; text-transform: uppercase; box-shadow: 0 12px 28px rgba(239,48,43,.2); }
 .contactForm button span { font-size: 18px; }
 .contactForm > small { display: block; margin-top: 12px; color: #999; font-size: 7px; line-height: 1.4; }
-.contactForm .leadConsent { margin: 2px 0 14px; color: #777; font-size: 9px; }
+.contactForm .leadConsent { margin: 2px 0 14px; color: #5c5c5c; font-size: 12px; }
 .mapCard { position: relative; display: grid; grid-template-columns: 290px 1fr; min-height: 410px; margin-top: 56px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-lg); background: #202020; box-shadow: var(--shadow-soft); }
 .mapCaption { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 38px; background: linear-gradient(145deg, #282323, #171717); }
 .mapCaption::after { content: ""; position: absolute; top: 38px; left: 38px; width: 28px; height: 3px; border-radius: 2px; background: var(--red); }
@@ -618,8 +619,8 @@ img { display: block; max-width: 100%; }
 .diagnosticForm { top: 500px; }
 .heroStats { bottom: 0; }
 
-.leadForm button:disabled { cursor: wait; opacity: .72; }
-.formFeedback { display: none; margin: 10px 0 0; font-size: 9px; font-weight: 600; line-height: 1.45; }
+.leadForm button:disabled { cursor: wait; opacity: .58; filter: saturate(.7); box-shadow: none; }
+.formFeedback { display: none; margin: 10px 0 0; font-size: 12px; font-weight: 600; line-height: 1.45; }
 .formFeedback.success, .formFeedback.error { display: block; }
 .formFeedback.success { color: #c9ffd0; }
 .formFeedback.error { color: #ffb7b4; }
@@ -732,9 +733,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .diagnosticForm label span, .formTitle span { font-size: 9px; }
   .diagnosticForm button { min-height: 50px; font-size: 11px; }
   .formConsent { font-size: 9px; line-height: 1.45; }
-  .leadConsent { font-size: 10px; line-height: 1.5; }
+  .leadConsent { font-size: 12px; line-height: 1.5; }
   .leadConsent input { width: 16px; height: 16px; }
-  .formFeedback { font-size: 11px; }
+  .formFeedback { font-size: 12px; }
 
   .headerMeta .headerAddress::after { content: "г. Москва, Ступинский проезд, д. 5, стр. 6"; font-size: 14px; font-weight: 500; }
   .mobileMenu { right: 0; }
@@ -787,7 +788,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .contactForm input, .contactForm textarea { font-size: 14px; }
   .contactForm button { font-size: 11px; }
   .contactForm > small { font-size: 9px; line-height: 1.5; }
-  .contactForm .leadConsent { font-size: 10px; }
+  .contactForm .leadConsent { font-size: 12px; }
   .mapCaption strong { font-size: 17px; }
   .mapCaption a { font-size: 10px; }
   .footerMenu a { font-size: 9px; }

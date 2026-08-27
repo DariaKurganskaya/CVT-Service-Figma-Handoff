@@ -78,6 +78,7 @@ test("keeps the client content and local visual assets wired", async () => {
   assert.match(leadForm, /event\.preventDefault\(\)/);
   assert.match(leadForm, /fetch\("\/api\/lead\.php"/);
   assert.match(leadForm, /name="consent"/);
+  assert.match(leadForm, /name="website"/);
   assert.match(leadForm, /disabled=\{isSending\}/);
   assert.doesNotMatch(leadForm, /mailto:|alert\(/);
   assert.match(mobileMenu, /removeAttribute\("open"\)/);

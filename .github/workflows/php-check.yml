@@ -1,0 +1,22 @@
+name: PHP checks
+
+on:
+  push:
+    branches: [beget-migration]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - run: php -l public/api/lead.php
+      - run: php -l server/cvt-leads.example.php
+      - run: php -l tests/lead-handler.test.php
+      - run: php tests/lead-handler.test.php
