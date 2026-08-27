@@ -1,7 +1,7 @@
 export const legalLinks = {
-  privacy: "/privacy-policy",
-  consent: "/personal-data-consent",
-  cookies: "/cookie-policy",
+  privacy: "/privacy-policy/",
+  consent: "/personal-data-consent/",
+  cookies: "/cookie-policy/",
 } as const;
 
 export const siteData = {
@@ -32,7 +32,7 @@ export const siteData = {
       icon: "/social/max.png",
     },
   },
-  documentVersion: "Версия 0.1 от 26 августа 2026 года",
+  documentVersion: "Версия 0.2 от 27 августа 2026 года",
 } as const;
 
 export const legalOperatorData = {

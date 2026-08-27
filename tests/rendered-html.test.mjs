@@ -2,33 +2,16 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
-async function render() {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+const out = (path) => new URL(`../out/${path}`, import.meta.url);
 
-  return worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
-  );
-}
+test("builds the finished CVT Сервис site as static HTML", async () => {
+  const [html, privacy, consent, cookies] = await Promise.all([
+    readFile(out("index.html"), "utf8"),
+    readFile(out("privacy-policy/index.html"), "utf8"),
+    readFile(out("personal-data-consent/index.html"), "utf8"),
+    readFile(out("cookie-policy/index.html"), "utf8"),
+  ]);
 
-test("server-renders the finished CVT Сервис landing page", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-
-  const html = await response.text();
   assert.match(html, /<title>CVT Сервис — ремонт вариаторов в Москве<\/title>/i);
   assert.match(html, /Профессиональный ремонт/);
   assert.match(html, /Бесплатно за 30 минут найдём причину неисправности/);
@@ -37,18 +20,28 @@ test("server-renders the finished CVT Сервис landing page", async () => {
   assert.match(html, /Что говорят/);
   assert.match(html, /\+7 \(950\) 701-82-52/);
   assert.match(html, /Ступинский проезд, д\. 5, стр\. 6/);
+  assert.match(html, /info@remontvariator\.ru/);
+  assert.match(html, /https:\/\/t\.me\/inkom10/);
+  assert.match(html, /https:\/\/wa\.me\/79014037963/);
+  assert.match(html, /href="\/privacy-policy\/"/);
+  assert.match(html, /href="\/personal-data-consent\/"/);
+  assert.match(html, /href="\/cookie-policy\/"/);
+  assert.match(privacy, /Политика обработки персональных данных/);
+  assert.match(consent, /Согласие на обработку персональных данных/);
+  assert.match(cookies, /Политика использования cookie и внешних сервисов/);
   assert.doesNotMatch(html, /Обручева|\+7 \(915\) 644-26-41|servise@remontvariatora1\.ru/);
-  assert.doesNotMatch(html, /Your site is taking shape|codex-preview/i);
+  assert.doesNotMatch(html, /vinext|cloudflare|chatgpt-auth/i);
 });
 
 test("keeps the client content and local visual assets wired", async () => {
-  const [page, layout, styles, leadForm, mobileMenu, legalData] = await Promise.all([
+  const [page, layout, styles, leadForm, mobileMenu, legalData, config] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/lead-form.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/mobile-menu.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/legal-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /8 500\+/);
@@ -88,6 +81,10 @@ test("keeps the client content and local visual assets wired", async () => {
   assert.match(mobileMenu, /removeAttribute\("open"\)/);
   assert.match(mobileMenu, /#guarantee/);
   assert.match(layout, /CVT Сервис — ремонт вариаторов/);
+  assert.doesNotMatch(layout, /next\/headers|headers\(/);
+  assert.match(config, /output: "export"/);
+  assert.match(config, /trailingSlash: true/);
+  assert.match(config, /unoptimized: true/);
 
   await Promise.all([
     access(new URL("../public/hero-variator-real.jpg", import.meta.url)),
@@ -99,5 +96,8 @@ test("keeps the client content and local visual assets wired", async () => {
     access(new URL("../public/process-repair-real.jpg", import.meta.url)),
     access(new URL("../public/brands/nissan.png", import.meta.url)),
     access(new URL("../public/brands/toyota.png", import.meta.url)),
+    access(out("hero-variator-real.jpg")),
+    access(out("social/telegram.png")),
+    access(out("brands/nissan.png")),
   ]);
 });
