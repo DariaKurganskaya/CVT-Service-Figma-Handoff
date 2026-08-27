@@ -100,6 +100,7 @@ export function LeadForm({ variant }: LeadFormProps) {
               inputMode="tel"
               autoComplete="tel"
               pattern="[0-9+()\-\s]{7,}"
+              maxLength={40}
               required
             />
           </label>
@@ -133,6 +134,7 @@ export function LeadForm({ variant }: LeadFormProps) {
           inputMode="tel"
           autoComplete="tel"
           pattern="[0-9+()\-\s]{7,}"
+          maxLength={40}
           required
         />
       </label>

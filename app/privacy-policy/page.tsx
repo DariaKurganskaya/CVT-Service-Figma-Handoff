@@ -1,6 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { LegalPage } from "../legal-page";
 import { legalLinks, legalOperatorData, siteData } from "../legal-data";
+
+export const metadata: Metadata = {
+  title: "Политика обработки персональных данных",
+  description: "Политика обработки персональных данных посетителей сайта CVT Сервис.",
+  alternates: { canonical: "/privacy-policy/" },
+};
 
 export default function PrivacyPolicyPage() {
   return (

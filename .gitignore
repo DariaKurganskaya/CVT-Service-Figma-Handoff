@@ -17,6 +17,7 @@ node_modules/
 .next/
 .vinext/
 out/
+/artifacts/
 
 # misc
 .DS_Store

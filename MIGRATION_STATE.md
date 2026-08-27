@@ -13,9 +13,10 @@
 
 ## Следующие этапы
 
-1. Разместить содержимое `out/` в `public_html` на Beget и проверить production-доставку заявок.
-2. Настроить Telegram: скопировать `server/cvt-leads.example.php` в приватный каталог выше `public_html` как `private/cvt-leads.php` и добавить токен бота и `chat_id`.
-3. Предпродакшен-проверка статического сайта и подготовка пакета для загрузки.
+1. Закрыть клиентские и юридические блокеры из `PREDEPLOY_BLOCKERS.md`.
+2. Выполнить `scripts/build-beget-package.sh` и проверить архив по `BEGET_DEPLOYMENT_CHECKLIST.md`.
+3. Только после этого разместить содержимое `out/` в `public_html` на Beget и проверить production-доставку заявок.
+4. После решения по Telegram скопировать `server/cvt-leads.example.php` в приватный каталог выше `public_html` как `private/cvt-leads.php` и добавить token бота и `chat_id`.
 
 ## Локальный запуск
 

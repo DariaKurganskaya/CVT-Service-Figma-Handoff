@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   },
   description:
     "Специализированный ремонт вариаторов в Москве. Диагностика за 30 минут, ремонт за 1–3 дня и гарантия до 24 месяцев.",
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

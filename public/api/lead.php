@@ -60,6 +60,11 @@ function cvtIsList(array $value): bool
     return true;
 }
 
+function cvtIsJsonContentType(string $contentType): bool
+{
+    return preg_match('/^\s*application\/json\s*(?:;\s*charset\s*=\s*utf-8\s*)?$/iD', $contentType) === 1;
+}
+
 function cvtValidateLead(array $payload): array
 {
     if (cvtIsList($payload)) {
@@ -111,6 +116,39 @@ function cvtRateLimitDirectory(): string
     return rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'cvt-remontvariator-rate-limit';
 }
 
+function cvtCleanupRateLimitDirectory(string $directory, int $now, int $sampleRate = 20): void
+{
+    if ($sampleRate < 1) {
+        $sampleRate = 1;
+    }
+
+    if ($sampleRate > 1 && random_int(1, $sampleRate) !== 1) {
+        return;
+    }
+
+    try {
+        $entries = new FilesystemIterator($directory, FilesystemIterator::SKIP_DOTS);
+        $checked = 0;
+        foreach ($entries as $entry) {
+            if ($checked >= 12) {
+                break;
+            }
+
+            $filename = $entry->getFilename();
+            if (!preg_match('/^[a-f0-9]{64}\.json$/D', $filename)) {
+                continue;
+            }
+
+            $checked++;
+            if ($entry->getMTime() < $now - CVT_RATE_LIMIT_WINDOW) {
+                @unlink($entry->getPathname());
+            }
+        }
+    } catch (UnexpectedValueException) {
+        // Rate limiting remains available even if optional stale-file cleanup cannot run.
+    }
+}
+
 function cvtConsumeRateLimit(string $ip, string $directory, ?int $now = null): array
 {
     $now = $now ?? time();
@@ -154,11 +192,7 @@ function cvtConsumeRateLimit(string $ip, string $directory, ?int $now = null): a
     @flock($handle, LOCK_UN);
     fclose($handle);
 
-    foreach (glob($directory . DIRECTORY_SEPARATOR . '*.json') ?: [] as $candidate) {
-        if (@filemtime($candidate) !== false && filemtime($candidate) < $now - CVT_RATE_LIMIT_WINDOW) {
-            @unlink($candidate);
-        }
-    }
+    cvtCleanupRateLimitDirectory($directory, $now);
 
     return ['allowed' => true];
 }
@@ -293,7 +327,7 @@ if (PHP_SAPI !== 'cli') {
     $contentLength = $_SERVER['CONTENT_LENGTH'] ?? null;
     $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
     $rawBody = file_get_contents('php://input');
-    if ((is_string($contentLength) && ctype_digit($contentLength) && (int) $contentLength > CVT_MAX_REQUEST_BYTES) || !is_string($contentType) || stripos($contentType, 'application/json') !== 0 || !is_string($rawBody) || strlen($rawBody) === 0 || strlen($rawBody) > CVT_MAX_REQUEST_BYTES) {
+    if ((is_string($contentLength) && ctype_digit($contentLength) && (int) $contentLength > CVT_MAX_REQUEST_BYTES) || !is_string($contentType) || !cvtIsJsonContentType($contentType) || !is_string($rawBody) || strlen($rawBody) === 0 || strlen($rawBody) > CVT_MAX_REQUEST_BYTES) {
         cvtRespond(400, ['ok' => false, 'message' => 'Некорректный формат заявки.']);
     }
 

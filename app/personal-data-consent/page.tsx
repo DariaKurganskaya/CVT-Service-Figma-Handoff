@@ -1,6 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { LegalPage } from "../legal-page";
 import { legalLinks, legalOperatorData, siteData } from "../legal-data";
+
+export const metadata: Metadata = {
+  title: "Согласие на обработку персональных данных",
+  description: "Согласие на обработку персональных данных для форм сайта CVT Сервис.",
+  alternates: { canonical: "/personal-data-consent/" },
+};
 
 export default function PersonalDataConsentPage() {
   return (

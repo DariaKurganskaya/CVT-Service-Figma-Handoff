@@ -10,6 +10,7 @@ npm run dev
 npm run build
 npm test
 npm run lint
+scripts/build-beget-package.sh
 ```
 
 После `npm run build` готовые статические файлы находятся в `out/`. В папку также копируется `out/api/lead.php` — единый обработчик заявок для обеих форм.
@@ -27,5 +28,7 @@ npm run lint
 Обработчик использует honeypot и ограничение до 5 реальных попыток за 10 минут на `REMOTE_ADDR`. Во временном каталоге хранится только SHA-256-хеш IP и отметки времени: имя, телефон и текст заявки не сохраняются.
 
 Следующий этап — предпродакшен-проверка статического сайта и подготовка пакета для загрузки.
+
+Перед размещением на Beget закройте клиентские вопросы из `PREDEPLOY_BLOCKERS.md`, затем используйте `BEGET_DEPLOYMENT_CHECKLIST.md`. Скрипт `scripts/build-beget-package.sh` создаёт локальный архив `artifacts/remontvariator-beget.zip`; он не публикуется в Git.
 
 В проекте нет Vinext, Cloudflare, D1, Drizzle, ChatGPT Auth и ChatGPT Sites.

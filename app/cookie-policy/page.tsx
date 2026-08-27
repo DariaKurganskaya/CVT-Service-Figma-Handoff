@@ -1,6 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { LegalPage } from "../legal-page";
 import { legalLinks, siteData } from "../legal-data";
+
+export const metadata: Metadata = {
+  title: "Политика использования cookie",
+  description: "Политика использования cookie и внешних сервисов сайта CVT Сервис.",
+  alternates: { canonical: "/cookie-policy/" },
+};
 
 export default function CookiePolicyPage() {
   return (

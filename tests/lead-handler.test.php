@@ -40,6 +40,10 @@ expect(cvtValidateLead(lead(['phone' => 'abc1234567']))['valid'] === false, 'let
 expect(cvtValidateLead(lead(['phone' => '+7 123']))['valid'] === false, 'short phone is rejected');
 expect(cvtValidateLead(lead(['message' => str_repeat('а', 1001)]))['valid'] === false, 'long message is rejected');
 expect(cvtValidateLead(lead(['name' => ['array']]))['valid'] === false, 'array input is rejected');
+expect(cvtIsJsonContentType('application/json'), 'plain JSON content type is accepted');
+expect(cvtIsJsonContentType(' Application/JSON ; Charset = UTF-8 '), 'JSON UTF-8 content type accepts whitespace and case');
+expect(!cvtIsJsonContentType('application/jsonp'), 'JSONP content type is rejected');
+expect(!cvtIsJsonContentType('application/json-patch+json'), 'JSON Patch content type is rejected');
 
 $honeypot = cvtHandleLead(lead(['website' => 'https://spam.example']), '203.0.113.11', $rateDirectory, $email, $telegram);
 expect($honeypot['status'] === 200 && $sent === 1, 'honeypot returns neutral success without delivery');
@@ -51,8 +55,18 @@ for ($attempt = 0; $attempt < CVT_RATE_LIMIT_ATTEMPTS; $attempt++) {
 $limited = cvtConsumeRateLimit('203.0.113.12', $rateDirectory, 1000);
 expect($limited['allowed'] === false && $limited['status'] === 429 && ($limited['retry_after'] ?? 0) > 0, 'rate limit rejects excess attempts');
 
+$staleRateFile = $rateDirectory . DIRECTORY_SEPARATOR . hash('sha256', '203.0.113.99') . '.json';
+$foreignFile = $rateDirectory . DIRECTORY_SEPARATOR . 'keep.txt';
+file_put_contents($staleRateFile, '[]');
+touch($staleRateFile, 100);
+file_put_contents($foreignFile, 'keep');
+cvtCleanupRateLimitDirectory($rateDirectory, 1000, 1);
+expect(!is_file($staleRateFile), 'cleanup removes stale rate-limit JSON files');
+expect(is_file($foreignFile), 'cleanup leaves unrelated files untouched');
+
 foreach (glob($rateDirectory . DIRECTORY_SEPARATOR . '*.json') ?: [] as $file) {
     @unlink($file);
 }
+@unlink($foreignFile);
 @rmdir($rateDirectory);
 echo "PHP lead handler tests passed\n";

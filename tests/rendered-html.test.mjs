@@ -5,11 +5,13 @@ import test from "node:test";
 const out = (path) => new URL(`../out/${path}`, import.meta.url);
 
 test("builds the finished CVT Сервис site as static HTML", async () => {
-  const [html, privacy, consent, cookies] = await Promise.all([
+  const [html, privacy, consent, cookies, robots, sitemap] = await Promise.all([
     readFile(out("index.html"), "utf8"),
     readFile(out("privacy-policy/index.html"), "utf8"),
     readFile(out("personal-data-consent/index.html"), "utf8"),
     readFile(out("cookie-policy/index.html"), "utf8"),
+    readFile(out("robots.txt"), "utf8"),
+    readFile(out("sitemap.xml"), "utf8"),
   ]);
 
   assert.match(html, /<title>CVT Сервис — ремонт вариаторов в Москве<\/title>/i);
@@ -29,6 +31,20 @@ test("builds the finished CVT Сервис site as static HTML", async () => {
   assert.match(privacy, /Политика обработки персональных данных/);
   assert.match(consent, /Согласие на обработку персональных данных/);
   assert.match(cookies, /Политика использования cookie и внешних сервисов/);
+  assert.match(html, /rel="canonical" href="https:\/\/remontvariator\.ru\/"/);
+  assert.match(privacy, /rel="canonical" href="https:\/\/remontvariator\.ru\/privacy-policy\/"/);
+  assert.match(consent, /rel="canonical" href="https:\/\/remontvariator\.ru\/personal-data-consent\/"/);
+  assert.match(cookies, /rel="canonical" href="https:\/\/remontvariator\.ru\/cookie-policy\/"/);
+  assert.match(robots, /Sitemap: https:\/\/remontvariator\.ru\/sitemap\.xml/);
+  assert.doesNotMatch(robots, /chatgpt\.site|localhost/i);
+  for (const url of [
+    "https://remontvariator.ru/",
+    "https://remontvariator.ru/privacy-policy/",
+    "https://remontvariator.ru/personal-data-consent/",
+    "https://remontvariator.ru/cookie-policy/",
+  ]) {
+    assert.match(sitemap, new RegExp(url.replaceAll("/", "\\/")));
+  }
   assert.doesNotMatch(html, /Обручева|\+7 \(915\) 644-26-41|servise@remontvariatora1\.ru/);
   assert.doesNotMatch(html, /vinext|cloudflare|chatgpt-auth/i);
 });
