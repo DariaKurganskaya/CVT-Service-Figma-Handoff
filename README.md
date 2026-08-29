@@ -27,8 +27,8 @@ scripts/build-beget-package.sh
 
 Обработчик использует honeypot и ограничение до 5 реальных попыток за 10 минут на `REMOTE_ADDR`. Во временном каталоге хранится только SHA-256-хеш IP и отметки времени: имя, телефон и текст заявки не сохраняются.
 
-Следующий этап — предпродакшен-проверка статического сайта и подготовка пакета для загрузки.
+Предпродакшен-проверка и упаковка для Beget завершены. Следующий шаг — закрыть клиентские и юридические вопросы из `PREDEPLOY_BLOCKERS.md`; только после этого можно переходить к размещению на Beget по `BEGET_DEPLOYMENT_CHECKLIST.md`.
 
-Перед размещением на Beget закройте клиентские вопросы из `PREDEPLOY_BLOCKERS.md`, затем используйте `BEGET_DEPLOYMENT_CHECKLIST.md`. Скрипт `scripts/build-beget-package.sh` создаёт локальный архив `artifacts/remontvariator-beget.zip`; он не публикуется в Git.
+Скрипт `scripts/build-beget-package.sh` создаёт локальный архив `artifacts/remontvariator-beget.zip`; он не публикуется в Git. Выведенный SHA-256 подтверждает целостность конкретно созданного архива. При повторной сборке SHA-256 может измениться из-за build ID и метаданных сборки.
 
 В проекте нет Vinext, Cloudflare, D1, Drizzle, ChatGPT Auth и ChatGPT Sites.
