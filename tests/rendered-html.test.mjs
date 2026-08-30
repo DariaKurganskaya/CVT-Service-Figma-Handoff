@@ -119,6 +119,5 @@ test("keeps the client content and local visual assets wired", async () => {
     access(out("social/telegram.png")),
     access(out("brands/nissan.png")),
     access(out("api/lead.php")),
-    access(new URL("../server/cvt-leads.example.php", import.meta.url)),
   ]);
 });

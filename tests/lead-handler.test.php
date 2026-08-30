@@ -26,10 +26,12 @@ function lead(array $changes = []): array
 $rateDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cvt-lead-test-' . bin2hex(random_bytes(8));
 $sent = 0;
 $email = static function (string $message) use (&$sent): bool { $sent++; return $message !== ''; };
-$telegram = static function (string $message): bool { return false; };
 
-$valid = cvtHandleLead(lead(), '203.0.113.10', $rateDirectory, $email, $telegram);
+$valid = cvtHandleLead(lead(), '203.0.113.10', $rateDirectory, $email);
 expect($valid['status'] === 200 && $sent === 1, 'valid lead is accepted without real delivery');
+
+$failedEmail = cvtHandleLead(lead(), '203.0.113.20', $rateDirectory, static function (string $message): bool { return false; });
+expect($failedEmail['status'] === 502 && $failedEmail['body']['ok'] === false, 'email delivery failure is reported safely');
 
 $multiline = cvtValidateLead(lead(['message' => "Первая строка\r\nВторая строка\rТретья строка"]));
 expect(($multiline['valid'] ?? false) && $multiline['message'] === "Первая строка\nВторая строка\nТретья строка", 'multiline message is normalized');
@@ -45,7 +47,7 @@ expect(cvtIsJsonContentType(' Application/JSON ; Charset = UTF-8 '), 'JSON UTF-8
 expect(!cvtIsJsonContentType('application/jsonp'), 'JSONP content type is rejected');
 expect(!cvtIsJsonContentType('application/json-patch+json'), 'JSON Patch content type is rejected');
 
-$honeypot = cvtHandleLead(lead(['website' => 'https://spam.example']), '203.0.113.11', $rateDirectory, $email, $telegram);
+$honeypot = cvtHandleLead(lead(['website' => 'https://spam.example']), '203.0.113.11', $rateDirectory, $email);
 expect($honeypot['status'] === 200 && $sent === 1, 'honeypot returns neutral success without delivery');
 
 for ($attempt = 0; $attempt < CVT_RATE_LIMIT_ATTEMPTS; $attempt++) {

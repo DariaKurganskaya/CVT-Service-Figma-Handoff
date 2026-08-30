@@ -33,11 +33,6 @@ yarn-error.log*
 .env
 .env.*
 
-# Private Beget lead-delivery configuration. Keep it above public_html.
-/server/cvt-leads.php
-/server/cvt-leads.local.php
-/private/
-
 # vercel
 .vercel
 

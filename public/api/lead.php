@@ -230,56 +230,7 @@ function cvtSendEmail(string $message): bool
     return @mail(CVT_LEAD_EMAIL, cvtEncodeHeader(CVT_LEAD_SUBJECT), $message, $headers);
 }
 
-function cvtPrivateTelegramConfig(): array
-{
-    $documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
-    if (!is_string($documentRoot) || $documentRoot === '') {
-        return [];
-    }
-
-    $configPath = dirname($documentRoot) . '/private/cvt-leads.php';
-    if (!is_file($configPath)) {
-        return [];
-    }
-
-    $config = @include $configPath;
-
-    return is_array($config) ? $config : [];
-}
-
-function cvtSendTelegram(array $config, string $message): bool
-{
-    $token = $config['telegram_bot_token'] ?? null;
-    $chatId = $config['telegram_chat_id'] ?? null;
-    if (!is_string($token) || !is_string($chatId) || preg_match('/^\d+:[A-Za-z0-9_-]+$/', $token) !== 1 || $chatId === '') {
-        return false;
-    }
-
-    $payload = json_encode(['chat_id' => $chatId, 'text' => $message, 'disable_web_page_preview' => true], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    if (!is_string($payload)) {
-        return false;
-    }
-
-    if (function_exists('curl_init')) {
-        $curl = curl_init('https://api.telegram.org/bot' . $token . '/sendMessage');
-        if ($curl !== false) {
-            curl_setopt_array($curl, [CURLOPT_POST => true, CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Accept: application/json'], CURLOPT_POSTFIELDS => $payload, CURLOPT_RETURNTRANSFER => true, CURLOPT_CONNECTTIMEOUT => 5, CURLOPT_TIMEOUT => 5]);
-            $response = curl_exec($curl);
-            $status = (int) curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
-            curl_close($curl);
-            $decoded = is_string($response) ? json_decode($response, true) : null;
-            return $status >= 200 && $status < 300 && is_array($decoded) && ($decoded['ok'] ?? false) === true;
-        }
-    }
-
-    $context = stream_context_create(['http' => ['method' => 'POST', 'header' => "Content-Type: application/json\r\nAccept: application/json\r\n", 'content' => $payload, 'timeout' => 5, 'ignore_errors' => true]]);
-    $response = @file_get_contents('https://api.telegram.org/bot' . $token . '/sendMessage', false, $context);
-    $decoded = is_string($response) ? json_decode($response, true) : null;
-
-    return is_array($decoded) && ($decoded['ok'] ?? false) === true;
-}
-
-function cvtHandleLead(array $payload, string $ip, string $rateDirectory, callable $emailSender, callable $telegramSender): array
+function cvtHandleLead(array $payload, string $ip, string $rateDirectory, callable $emailSender): array
 {
     $lead = cvtValidateLead($payload);
     if (!($lead['valid'] ?? false)) {
@@ -295,9 +246,7 @@ function cvtHandleLead(array $payload, string $ip, string $rateDirectory, callab
     }
 
     $message = cvtBuildLeadMessage($lead);
-    $emailSent = $emailSender($message);
-    $telegramSent = $telegramSender($message);
-    if (!$emailSent && !$telegramSent) {
+    if (!$emailSender($message)) {
         return ['status' => 502, 'body' => ['ok' => false, 'message' => 'Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.']];
     }
 
@@ -340,8 +289,6 @@ if (PHP_SAPI !== 'cli') {
         cvtRespond(422, ['ok' => false, 'message' => 'Проверьте данные заявки и подтвердите согласие.']);
     }
 
-    $result = cvtHandleLead($payload, (string) ($_SERVER['REMOTE_ADDR'] ?? ''), cvtRateLimitDirectory(), 'cvtSendEmail', static function (string $message): bool {
-        return cvtSendTelegram(cvtPrivateTelegramConfig(), $message);
-    });
+    $result = cvtHandleLead($payload, (string) ($_SERVER['REMOTE_ADDR'] ?? ''), cvtRateLimitDirectory(), 'cvtSendEmail');
     cvtRespond($result['status'], $result['body'], $result['retry_after'] ?? null);
 }
