@@ -1,0 +1,120 @@
+name: Beget release package
+
+on:
+  push:
+    branches:
+      - beget-migration
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build Beget package
+        run: scripts/build-beget-package.sh
+
+      - name: Verify release ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          package="artifacts/remontvariator-beget.zip"
+          checksum="artifacts/remontvariator-beget.sha256"
+
+          test -s "$package"
+
+          entries="$(unzip -Z1 "$package")"
+
+          required_files=(
+            "index.html"
+            "api/lead.php"
+            "robots.txt"
+            "sitemap.xml"
+          )
+          required_prefixes=(
+            "_next/"
+            "privacy-policy/"
+            "personal-data-consent/"
+            "cookie-policy/"
+          )
+
+          for required in "${required_files[@]}"; do
+            printf '%s\n' "$entries" | grep -Fxq "$required"
+          done
+
+          for prefix in "${required_prefixes[@]}"; do
+            printf '%s\n' "$entries" | grep -Fq "$prefix"
+          done
+
+          forbidden_patterns=(
+            '(^|/)\.git(/|$)'
+            '(^|/)\.github(/|$)'
+            '(^|/)\.env(\.|$)'
+            '(^|/)node_modules(/|$)'
+            '(^|/)\.next(/|$)'
+            '(^|/)app(/|$)'
+            '(^|/)server(/|$)'
+            '(^|/)tests(/|$)'
+            '(^|/)(README|CHANGELOG|CONTRIBUTING)(\.[^/]+)?$'
+            '(^|/)[^/]+\.md$'
+            '(^|/)[^/]+\.(ts|tsx)$'
+            '(^|/)[^/]+\.zip$'
+            '(^|/)(figma|tilda|handoff)(/|$)'
+          )
+
+          for pattern in "${forbidden_patterns[@]}"; do
+            if printf '%s\n' "$entries" | grep -Eiq "$pattern"; then
+              echo "Forbidden release-package entry detected."
+              exit 1
+            fi
+          done
+
+          lead_file="$(mktemp)"
+          trap 'rm -f "$lead_file"' EXIT
+          unzip -p "$package" "api/lead.php" > "$lead_file"
+
+          grep -Fq "info@remontvariator.ru" "$lead_file"
+          grep -Fq 'if (!$emailSender($message))' "$lead_file"
+
+          if grep -Eiq 'api\.telegram\.org|bot[_-]?token|chat_id' "$lead_file"; then
+            echo "Telegram delivery configuration detected in lead handler."
+            exit 1
+          fi
+
+          if printf '%s\n' "$entries" | grep -Fxq "server/cvt-leads.example.php"; then
+            echo "Deprecated server lead handler detected in release package."
+            exit 1
+          fi
+
+          sha256sum "$package" > "$checksum"
+          test -s "$checksum"
+
+      - name: Upload Beget release package
+        uses: actions/upload-artifact@v4
+        with:
+          name: remontvariator-beget
+          path: |
+            artifacts/remontvariator-beget.zip
+            artifacts/remontvariator-beget.sha256
+          if-no-files-found: error
+          retention-days: 7
