@@ -1,8 +1,8 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, KeyboardEvent, useState } from "react";
 import { legalLinks } from "./legal-data";
-import { formatRussianPhone, isCompleteRussianPhone } from "./phone";
+import { formatRussianPhone, getRussianPhoneBackspaceState, isCompleteRussianPhone } from "./phone";
 
 type LeadFormProps = {
   variant: "hero" | "contact";
@@ -22,6 +22,26 @@ export function LeadForm({ variant }: LeadFormProps) {
   function handlePhoneChange(event: ChangeEvent<HTMLInputElement>) {
     event.currentTarget.setCustomValidity("");
     setPhone(formatRussianPhone(event.currentTarget.value));
+  }
+
+  function handlePhoneKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== "Backspace") {
+      return;
+    }
+
+    const input = event.currentTarget;
+    const nextState = getRussianPhoneBackspaceState(phone, input.selectionStart, input.selectionEnd);
+    if (nextState === null) {
+      return;
+    }
+
+    event.preventDefault();
+    input.setCustomValidity("");
+    setPhone(nextState.value);
+
+    requestAnimationFrame(() => {
+      input.setSelectionRange(nextState.caret, nextState.caret);
+    });
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -115,6 +135,7 @@ export function LeadForm({ variant }: LeadFormProps) {
               pattern={"\\+7 \\([0-9]{3}\\) [0-9]{3}-[0-9]{2}-[0-9]{2}"}
               value={phone}
               onChange={handlePhoneChange}
+              onKeyDown={handlePhoneKeyDown}
               maxLength={18}
               title="Введите номер полностью в формате +7 (999) 999-99-99"
               required
@@ -152,6 +173,7 @@ export function LeadForm({ variant }: LeadFormProps) {
           pattern={"\\+7 \\([0-9]{3}\\) [0-9]{3}-[0-9]{2}-[0-9]{2}"}
           value={phone}
           onChange={handlePhoneChange}
+          onKeyDown={handlePhoneKeyDown}
           maxLength={18}
           title="Введите номер полностью в формате +7 (999) 999-99-99"
           required
