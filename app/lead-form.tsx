@@ -1,7 +1,8 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { legalLinks } from "./legal-data";
+import { formatRussianPhone, isCompleteRussianPhone } from "./phone";
 
 type LeadFormProps = {
   variant: "hero" | "contact";
@@ -16,11 +17,22 @@ const feedback = {
 
 export function LeadForm({ variant }: LeadFormProps) {
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
+  const [phone, setPhone] = useState(() => formatRussianPhone(""));
+
+  function handlePhoneChange(event: ChangeEvent<HTMLInputElement>) {
+    event.currentTarget.setCustomValidity("");
+    setPhone(formatRussianPhone(event.currentTarget.value));
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const form = event.currentTarget;
+    const phoneInput = form.elements.namedItem("phone");
+    if (phoneInput instanceof HTMLInputElement) {
+      phoneInput.setCustomValidity(isCompleteRussianPhone(phone) ? "" : "Введите номер полностью в формате +7 (999) 999-99-99.");
+    }
+
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
@@ -52,6 +64,7 @@ export function LeadForm({ variant }: LeadFormProps) {
       }
 
       form.reset();
+      setPhone(formatRussianPhone(""));
       setSubmitState("success");
     } catch {
       setSubmitState("error");
@@ -99,8 +112,11 @@ export function LeadForm({ variant }: LeadFormProps) {
               placeholder="+7 (___) ___-__-__"
               inputMode="tel"
               autoComplete="tel"
-              pattern="[0-9+()\-\s]{7,}"
-              maxLength={40}
+              pattern={"\\+7 \\([0-9]{3}\\) [0-9]{3}-[0-9]{2}-[0-9]{2}"}
+              value={phone}
+              onChange={handlePhoneChange}
+              maxLength={18}
+              title="Введите номер полностью в формате +7 (999) 999-99-99"
               required
             />
           </label>
@@ -133,8 +149,11 @@ export function LeadForm({ variant }: LeadFormProps) {
           placeholder="+7 (___) ___-__-__"
           inputMode="tel"
           autoComplete="tel"
-          pattern="[0-9+()\-\s]{7,}"
-          maxLength={40}
+          pattern={"\\+7 \\([0-9]{3}\\) [0-9]{3}-[0-9]{2}-[0-9]{2}"}
+          value={phone}
+          onChange={handlePhoneChange}
+          maxLength={18}
+          title="Введите номер полностью в формате +7 (999) 999-99-99"
           required
         />
       </label>

@@ -73,7 +73,7 @@ img { display: block; max-width: 100%; }
   .legalFooter { flex-direction: column; gap: 16px; margin-top: 36px; font-size: 14px; }
 }
 .shell { width: min(1200px, calc(100% - 72px)); margin: 0 auto; }
-.section { position: relative; padding: 108px 0; }
+.section { position: relative; padding: 108px 0; scroll-margin-top: 76px; }
 
 .hero {
   position: relative;
@@ -329,8 +329,8 @@ img { display: block; max-width: 100%; }
 .brandGrid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
 .brandGrid figure { display: grid; place-items: center; min-height: 132px; margin: 0; padding: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-md); background: linear-gradient(145deg, #242424, #191919); transition: transform .25s ease, border-color .25s ease, background .25s ease; }
 .brandGrid figure:hover { transform: translateY(-4px); border-color: rgba(239,48,43,.48); background: #292929; }
-.brandGrid img { width: 84px; height: 84px; object-fit: contain; filter: grayscale(1) brightness(1.2); transition: filter .25s ease, transform .25s ease; }
-.brandGrid figure:hover img { filter: grayscale(.25) brightness(1.1); transform: scale(1.08); }
+.brandGrid img { width: 84px; height: 84px; object-fit: contain; transition: transform .25s ease; }
+.brandGrid figure:hover img { transform: scale(1.08); }
 
 .guarantee { overflow: hidden; background: #181818; }
 .guaranteeCard { display: grid; grid-template-columns: .82fr 1.18fr; gap: 54px; padding: 64px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-lg); background: radial-gradient(circle at 8% 18%, rgba(239,48,43,.22), transparent 33%), linear-gradient(145deg, #252020, #141414 64%); color: white; box-shadow: var(--shadow-soft); }
@@ -679,13 +679,9 @@ img { display: block; max-width: 100%; }
   box-shadow: 0 8px 20px rgba(239,48,43,.16);
 }
 
-.brandGrid img { filter: grayscale(1) invert(1) brightness(1.2) contrast(.82); }
-.brandGrid figure:hover img { filter: grayscale(.12) brightness(1.25) contrast(.9); }
-
 /* Light logo cards preserve the original brand marks on a dark section. */
 .brandGrid figure { border-color: rgba(255,255,255,.22); background: #f5f3f0; }
 .brandGrid figure:hover { background: #fff; border-color: rgba(239,48,43,.78); }
-.brandGrid img, .brandGrid figure:hover img { filter: none; }
 
 .footerSocials .messengerMax, .footerSocials a { display: inline-flex; align-items: center; gap: 8px; width: auto; min-width: 0; height: auto; padding: 5px 0; }
 .footerSocials .messengerMax { color: rgba(255,255,255,.7); }
@@ -846,4 +842,113 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .footerSocials { align-items: flex-start; flex-wrap: wrap; }
   .footerSocials .messengerMax, .footerSocials a { width: auto; min-width: 0; height: auto; padding: 7px 0; }
   .footerSocials img, .footerSocials .messengerMax img { width: 29px; height: 29px; }
+}
+
+/* Stage 9C: form controls, navigation, compact cards and shared interaction states. */
+.leadConsent input[type="checkbox"],
+.contactForm .leadConsent input[type="checkbox"] {
+  appearance: auto;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  min-height: 20px;
+  margin: 1px 0 0;
+  padding: 0;
+  border-radius: 4px;
+  accent-color: var(--red);
+}
+.contactForm .leadConsent {
+  align-items: flex-start;
+  color: #545454;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-transform: none;
+}
+.contactForm .leadConsent span { text-transform: none; }
+.serviceAddressLines { display: grid; gap: 0; }
+.serviceAddressLines span { display: block; white-space: nowrap; }
+
+.mobileMenu { z-index: 60; }
+.mobileMenu nav { z-index: 1; }
+.sectionNav a,
+.headerPhone,
+.bigPhone,
+.footerPhone,
+.footerMenu a,
+.contactRows a,
+.mapCaption a,
+.serviceItem > a,
+.floatingCall,
+.diagnosticForm button,
+.contactForm button { transition: transform .22s ease, color .22s ease, background-color .22s ease, border-color .22s ease, box-shadow .22s ease, opacity .22s ease; }
+
+.guaranteeCard {
+  gap: 42px;
+  padding: 52px 56px;
+}
+.guaranteeBenefits { align-items: stretch; }
+.guaranteeBenefits article {
+  display: flex;
+  flex-direction: column;
+  min-height: 196px;
+  transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease, background-color .24s ease;
+}
+.guaranteeBenefits article > span { margin-bottom: 24px; transition: transform .24s ease, background-color .24s ease; }
+.guaranteeBenefits article strong { min-height: 35px; }
+.guaranteeBenefits article p { margin-top: auto; }
+.guaranteeNote { padding: 18px 22px; }
+
+.reviewCard {
+  transition: transform .24s ease, border-color .24s ease, background-color .24s ease, box-shadow .24s ease;
+}
+.reviewCard .stars { transition: color .24s ease, letter-spacing .24s ease, transform .24s ease; }
+
+.floatingCallHidden {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(14px) scale(.9);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .diagnosticForm button:hover:not(:disabled),
+  .contactForm button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 30px rgba(239,48,43,.32);
+  }
+  .diagnosticForm button:active:not(:disabled),
+  .contactForm button:active:not(:disabled),
+  .sectionCta > a:active,
+  .aboutCtaButton:active,
+  .lightButton:active { transform: translateY(0); }
+  .sectionNav a:hover { background: var(--red); }
+  .headerPhone:hover, .bigPhone:hover, .footerPhone:hover, .contactRows a:hover { color: var(--red); }
+  .footerMenu a:hover, .mapCaption a:hover { color: white; }
+  .serviceItem > a:hover { transform: translateX(3px); }
+  .floatingCall:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 14px 32px rgba(239,48,43,.38); }
+  .guaranteeBenefits article:hover {
+    transform: translateY(-5px);
+    border-color: rgba(239,48,43,.72);
+    background: rgba(239,48,43,.1);
+    box-shadow: 0 18px 36px rgba(0,0,0,.24);
+  }
+  .guaranteeBenefits article:hover > span { transform: translateY(-2px) rotate(-4deg); background: rgba(239,48,43,.16); }
+  .reviewCard:hover {
+    transform: translateY(-5px);
+    border-color: rgba(239,48,43,.7);
+    box-shadow: 0 20px 42px rgba(0,0,0,.28);
+  }
+  .reviewCard:hover .stars { color: #fff; letter-spacing: 4px; transform: translateX(2px); }
+}
+
+@media (max-width: 800px) {
+  .section { scroll-margin-top: 20px; }
+  .leadConsent input[type="checkbox"],
+  .contactForm .leadConsent input[type="checkbox"] { flex-basis: 20px; width: 20px; height: 20px; min-height: 20px; }
+  .mobileMenu.mobileMenuDocked { position: fixed; top: 12px; right: 14px; width: 44px; }
+  .mobileMenu.mobileMenuDocked nav { right: 0; width: min(calc(100vw - 28px), 330px); }
+  .guaranteeCard { gap: 30px; padding: 46px 22px; }
+  .guaranteeBenefits article { min-height: 172px; }
+  .guaranteeBenefits article > span { margin-bottom: 20px; }
+  .guaranteeNote { padding: 18px; }
 }

@@ -1,10 +1,27 @@
 import { LeadForm } from "./lead-form";
 import { legalLinks, siteData } from "./legal-data";
 import { MobileMenu } from "./mobile-menu";
+import { FloatingCall } from "./floating-call";
 
 const contacts = siteData.contacts;
 
 const mapQuery = encodeURIComponent(contacts.serviceAddress);
+
+const autoRepairStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "AutoRepair",
+  name: siteData.brand,
+  url: siteData.siteUrl,
+  telephone: contacts.phoneDisplay,
+  email: contacts.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Ступинский проезд, д. 5, стр. 6",
+    addressLocality: "Москва",
+    addressCountry: "RU",
+  },
+  openingHours: ["Mo-Su 08:00-21:00"],
+};
 
 const stats = [
   { value: "16+", label: "лет специализации" },
@@ -122,12 +139,13 @@ function SectionCta() {
 export default function Home() {
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(autoRepairStructuredData) }} />
       <section className="hero" id="top">
         <div className="heroShade" aria-hidden="true" />
 
         <header className="siteHeader shell">
           <a className="brand" href="#top" aria-label="CVT Сервис — на главную">
-            <img src="/client-logo-clean.png" alt="CVT Сервис — ремонт вариаторов" />
+            <img src="/client-logo-clean.png" alt="CVT Сервис — ремонт вариаторов" width="826" height="229" />
           </a>
 
           <a className="headerPhone" href={contacts.phoneHref}>
@@ -205,7 +223,7 @@ export default function Home() {
           </div>
 
           <figure className="aboutPhoto">
-            <img src="/service-diagnostic.webp" alt="Специалист проводит диагностику вариатора" />
+            <img src="/service-diagnostic.webp" alt="Специалист проводит диагностику вариатора" width="1536" height="1024" />
             <figcaption>Специализация — только CVT</figcaption>
           </figure>
 
@@ -255,7 +273,7 @@ export default function Home() {
         <div className="shell">
           <div className="processGrid">
             <div className="processVisual">
-              <img src="/process-repair-real.jpg" alt="Мастер непосредственно ремонтирует вариатор в сервисе" />
+              <img src="/process-repair-real.jpg" alt="Мастер непосредственно ремонтирует вариатор в сервисе" width="1800" height="1200" />
               <div className="visualBadge"><strong>30</strong><span>минут<br />на диагностику*</span></div>
             </div>
 
@@ -290,7 +308,7 @@ export default function Home() {
           <div className="brandGrid">
             {brands.map((brand) => (
               <figure key={brand.name} title={brand.name}>
-                <img src={brand.src} alt={`Логотип ${brand.name}`} />
+                <img src={brand.src} alt={`Логотип ${brand.name}`} width="1024" height="1024" />
               </figure>
             ))}
           </div>
@@ -355,7 +373,7 @@ export default function Home() {
               </p>
               <a className="bigPhone" href={contacts.phoneHref}>{contacts.phoneDisplay}</a>
               <div className="contactRows">
-                <div><small>Адрес сервиса</small><strong>{contacts.serviceAddress}</strong></div>
+                <div><small>Адрес сервиса</small><strong className="serviceAddressLines"><span>г. Москва, Ступинский проезд,</span><span>д. 5, стр. 6</span></strong></div>
                 <div><small>Часы работы</small><strong>Пн–Вс: 08:00–21:00</strong></div>
                 <div className="contactEmail"><small>Почта</small><a href={contacts.emailHref}>{contacts.email}</a></div>
               </div>
@@ -383,7 +401,7 @@ export default function Home() {
       <footer className="footer">
         <div className="shell footerInner">
           <div className="footerAbout">
-            <a className="footerBrand" href="#top" aria-label="CVT Сервис — наверх"><img src="/client-logo-clean.png" alt="CVT Сервис — ремонт вариаторов" /></a>
+            <a className="footerBrand" href="#top" aria-label="CVT Сервис — наверх"><img src="/client-logo-clean.png" alt="CVT Сервис — ремонт вариаторов" width="826" height="229" /></a>
             <p>Специализированный ремонт вариаторов в Москве и области.</p>
             <SocialLinks className="footerSocials" showDetails />
           </div>
@@ -419,7 +437,7 @@ export default function Home() {
         </div>
       </footer>
 
-      <a className="floatingCall" href={contacts.phoneHref} aria-label="Позвонить мастеру">☎</a>
+      <FloatingCall href={contacts.phoneHref} />
     </main>
   );
 }

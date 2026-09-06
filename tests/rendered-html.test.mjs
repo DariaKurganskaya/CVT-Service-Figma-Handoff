@@ -32,6 +32,8 @@ test("builds the finished CVT Сервис site as static HTML", async () => {
   assert.match(consent, /Согласие на обработку персональных данных/);
   assert.match(cookies, /Политика использования cookie и внешних сервисов/);
   assert.match(html, /rel="canonical" href="https:\/\/remontvariator\.ru\/"/);
+  assert.match(html, /"@type":"AutoRepair"/);
+  assert.match(html, /"openingHours":\["Mo-Su 08:00-21:00"\]/);
   assert.match(privacy, /rel="canonical" href="https:\/\/remontvariator\.ru\/privacy-policy\/"/);
   assert.match(consent, /rel="canonical" href="https:\/\/remontvariator\.ru\/personal-data-consent\/"/);
   assert.match(cookies, /rel="canonical" href="https:\/\/remontvariator\.ru\/cookie-policy\/"/);
@@ -50,7 +52,7 @@ test("builds the finished CVT Сервис site as static HTML", async () => {
 });
 
 test("keeps the client content and local visual assets wired", async () => {
-  const [page, layout, styles, leadForm, mobileMenu, legalData, config] = await Promise.all([
+  const [page, layout, styles, leadForm, mobileMenu, legalData, config, phoneFormat, floatingCall] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -58,6 +60,8 @@ test("keeps the client content and local visual assets wired", async () => {
     readFile(new URL("../app/mobile-menu.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/legal-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/phone.js", import.meta.url), "utf8"),
+    readFile(new URL("../app/floating-call.tsx", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /8 500\+/);
@@ -69,6 +73,10 @@ test("keeps the client content and local visual assets wired", async () => {
   assert.match(styles, /background-position: 57% 365px/);
   assert.match(styles, /grid-template-areas:/);
   assert.match(styles, /width: calc\(100% - 14px\)/);
+  assert.match(styles, /\.contactForm \.leadConsent input\[type="checkbox"\]/);
+  assert.match(styles, /width: 20px/);
+  assert.match(styles, /scroll-margin-top: 76px/);
+  assert.doesNotMatch(styles, /\.brandGrid[^\n]*filter:|\.brandGrid figure:hover img \{ filter:/);
   assert.match(styles, /\.footerMenu \{ flex-direction: row/);
   assert.match(page, /className="headerAddress"/);
   assert.match(page, /className="headerHours"/);
@@ -96,14 +104,22 @@ test("keeps the client content and local visual assets wired", async () => {
   assert.match(leadForm, /name="consent"/);
   assert.match(leadForm, /name="website"/);
   assert.match(leadForm, /disabled=\{isSending\}/);
+  assert.match(leadForm, /formatRussianPhone/);
+  assert.match(leadForm, /isCompleteRussianPhone/);
   assert.doesNotMatch(leadForm, /mailto:|alert\(/);
   assert.match(mobileMenu, /removeAttribute\("open"\)/);
+  assert.match(mobileMenu, /mobileMenuDocked/);
   assert.match(mobileMenu, /#guarantee/);
   assert.match(layout, /CVT Сервис — ремонт вариаторов/);
   assert.doesNotMatch(layout, /next\/headers|headers\(/);
   assert.match(config, /output: "export"/);
   assert.match(config, /trailingSlash: true/);
   assert.match(config, /unoptimized: true/);
+  assert.match(phoneFormat, /MAX_RUSSIAN_PHONE_DIGITS = 10/);
+  assert.match(floatingCall, /IntersectionObserver/);
+  assert.match(page, /application\/ld\+json/);
+  assert.match(page, /AutoRepair/);
+  assert.match(page, /serviceAddressLines/);
 
   await Promise.all([
     access(new URL("../public/hero-variator-real.jpg", import.meta.url)),

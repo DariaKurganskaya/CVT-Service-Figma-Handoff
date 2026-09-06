@@ -40,6 +40,8 @@ expect(cvtValidateLead(lead(['source' => 'other']))['valid'] === false, 'unknown
 expect(cvtValidateLead(lead(['name' => 'А']))['valid'] === false, 'short name is rejected');
 expect(cvtValidateLead(lead(['phone' => 'abc1234567']))['valid'] === false, 'letters in phone are rejected');
 expect(cvtValidateLead(lead(['phone' => '+7 123']))['valid'] === false, 'short phone is rejected');
+expect(cvtValidateLead(lead(['phone' => '+7 (999) 000-00-0']))['valid'] === false, 'partial formatted phone is rejected');
+expect(cvtValidateLead(lead(['phone' => '8 (999) 000-00-00']))['valid'] === false, 'unformatted trunk-prefix phone is rejected');
 expect(cvtValidateLead(lead(['message' => str_repeat('а', 1001)]))['valid'] === false, 'long message is rejected');
 expect(cvtValidateLead(lead(['name' => ['array']]))['valid'] === false, 'array input is rejected');
 expect(cvtIsJsonContentType('application/json'), 'plain JSON content type is accepted');

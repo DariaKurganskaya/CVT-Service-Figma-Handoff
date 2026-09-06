@@ -88,16 +88,11 @@ function cvtValidateLead(array $payload): array
 
     if (
         $name === null || cvtTextLength($name) < 2 ||
-        $phone === null || preg_match('/^[0-9 +()\-]+$/', $phone) !== 1 ||
+        $phone === null || preg_match('/^\+7 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/D', $phone) !== 1 ||
         $message === null ||
         !in_array($source, ['hero', 'contact'], true) ||
         $consent !== true
     ) {
-        return ['valid' => false];
-    }
-
-    $digits = preg_replace('/\D/', '', $phone);
-    if (!is_string($digits) || strlen($digits) < 7 || strlen($digits) > 20) {
         return ['valid' => false];
     }
 
