@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import {
   ANALYTICS_CONSENT,
   COOKIE_CONSENT_EVENT,
@@ -26,19 +26,25 @@ function saveCookieConsent(value: typeof ANALYTICS_CONSENT | typeof NECESSARY_CO
   window.dispatchEvent(new Event(COOKIE_CONSENT_EVENT));
 }
 
+function subscribeToCookieConsent(onStoreChange: () => void) {
+  const notify = () => onStoreChange();
+  window.addEventListener(COOKIE_CONSENT_EVENT, notify);
+  window.addEventListener("storage", notify);
+  return () => {
+    window.removeEventListener(COOKIE_CONSENT_EVENT, notify);
+    window.removeEventListener("storage", notify);
+  };
+}
+
 /**
  * Keeps analytics opt-in separate from the technical operation of the site.
  * Any footer link with data-cookie-settings can reopen this panel.
  */
 export function CookieConsent() {
-  const [isReady, setIsReady] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const storedChoice = useSyncExternalStore(subscribeToCookieConsent, readCookieConsent, () => null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
-    const storedChoice = readCookieConsent();
-    setIsOpen(storedChoice !== ANALYTICS_CONSENT && storedChoice !== NECESSARY_CONSENT);
-    setIsReady(true);
-
     const openSettings = (event: MouseEvent) => {
       const target = event.target;
       if (!(target instanceof Element) || !target.closest("[data-cookie-settings]")) {
@@ -46,7 +52,7 @@ export function CookieConsent() {
       }
 
       event.preventDefault();
-      setIsOpen(true);
+      setIsSettingsOpen(true);
     };
 
     document.addEventListener("click", openSettings);
@@ -55,10 +61,11 @@ export function CookieConsent() {
 
   function choose(value: typeof ANALYTICS_CONSENT | typeof NECESSARY_CONSENT) {
     saveCookieConsent(value);
-    setIsOpen(false);
+    setIsSettingsOpen(false);
   }
 
-  if (!isReady || !isOpen) {
+  const hasStoredChoice = storedChoice === ANALYTICS_CONSENT || storedChoice === NECESSARY_CONSENT;
+  if (!isSettingsOpen && hasStoredChoice) {
     return null;
   }
 
