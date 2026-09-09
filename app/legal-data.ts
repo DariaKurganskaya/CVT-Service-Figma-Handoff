@@ -4,6 +4,11 @@ export const legalLinks = {
   cookies: "/cookie-policy/",
 } as const;
 
+export const analyticsData = {
+  yandexMetrikaCounter: 112386504,
+  consentStorage: "cvt-cookie-consent",
+} as const;
+
 export const siteData = {
   brand: "CVT Сервис",
   domain: "remontvariator.ru",
@@ -32,7 +37,7 @@ export const siteData = {
       icon: "/social/max.png",
     },
   },
-  documentVersion: "Версия 0.2 от 27 августа 2026 года",
+  documentVersion: "Версия 0.3 от 9 сентября 2026 года",
 } as const;
 
 export const legalOperatorData = {

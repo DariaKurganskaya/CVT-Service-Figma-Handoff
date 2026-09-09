@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { CookieConsent } from "./cookie-consent";
+import { YandexMetrika } from "./yandex-metrika";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://remontvariator.ru"),
@@ -46,7 +48,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body>{children}</body>
+      <body>
+        {children}
+        <CookieConsent />
+        <YandexMetrika />
+      </body>
     </html>
   );
 }

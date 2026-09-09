@@ -17,7 +17,7 @@ export function LegalPage({ title, children }: LegalPageProps) {
         <div className="legalBody">{children}</div>
         <footer className="legalFooter">
           <p>Контакт для связи с сервисом: <a href={siteData.contacts.emailHref}>{siteData.contacts.email}</a>, <a href={siteData.contacts.phoneHref}>{siteData.contacts.phoneDisplay}</a>.</p>
-          <Link href="/">На главную</Link>
+          <p><a href="#cookie-settings" data-cookie-settings>Настройки cookie</a> · <Link href="/">На главную</Link></p>
         </footer>
       </article>
     </main>

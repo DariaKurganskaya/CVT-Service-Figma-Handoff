@@ -432,6 +432,8 @@ export default function Home() {
               <a href={legalLinks.consent}>Согласие на обработку данных</a>
               <span aria-hidden="true"> · </span>
               <a href={legalLinks.cookies}>Политика обработки cookie</a>
+              <span aria-hidden="true"> · </span>
+              <a href="#cookie-settings" data-cookie-settings>Настройки cookie</a>
             </small>
           </div>
         </div>

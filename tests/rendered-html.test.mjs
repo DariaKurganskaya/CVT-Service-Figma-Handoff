@@ -31,6 +31,8 @@ test("builds the finished CVT Сервис site as static HTML", async () => {
   assert.match(privacy, /Политика обработки персональных данных/);
   assert.match(consent, /Согласие на обработку персональных данных/);
   assert.match(cookies, /Политика использования cookie и внешних сервисов/);
+  assert.match(cookies, /Яндекс Метрика/);
+  assert.match(cookies, /112386504/);
   assert.match(html, /rel="canonical" href="https:\/\/remontvariator\.ru\/"/);
   assert.match(html, /"@type":"AutoRepair"/);
   assert.match(html, /"openingHours":\["Mo-Su 08:00-21:00"\]/);
@@ -52,7 +54,7 @@ test("builds the finished CVT Сервис site as static HTML", async () => {
 });
 
 test("keeps the client content and local visual assets wired", async () => {
-  const [page, layout, styles, leadForm, mobileMenu, legalData, config, phoneFormat, floatingCall] = await Promise.all([
+  const [page, layout, styles, leadForm, mobileMenu, legalData, config, phoneFormat, floatingCall, cookieConsent, yandexMetrika, yandexLoader] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -62,6 +64,9 @@ test("keeps the client content and local visual assets wired", async () => {
     readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/phone.js", import.meta.url), "utf8"),
     readFile(new URL("../app/floating-call.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/cookie-consent.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/yandex-metrika.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/yandex-metrika-loader.js", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /8 500\+/);
@@ -103,6 +108,7 @@ test("keeps the client content and local visual assets wired", async () => {
   assert.match(leadForm, /fetch\("\/api\/lead\.php"/);
   assert.match(leadForm, /name="consent"/);
   assert.match(leadForm, /name="website"/);
+  assert.equal((leadForm.match(/ym-disable-keys/g) ?? []).length, 8);
   assert.match(leadForm, /disabled=\{isSending\}/);
   assert.match(leadForm, /formatRussianPhone/);
   assert.match(leadForm, /isCompleteRussianPhone/);
@@ -111,6 +117,8 @@ test("keeps the client content and local visual assets wired", async () => {
   assert.match(mobileMenu, /mobileMenuDocked/);
   assert.match(mobileMenu, /#guarantee/);
   assert.match(layout, /CVT Сервис — ремонт вариаторов/);
+  assert.match(layout, /<CookieConsent \/>/);
+  assert.match(layout, /<YandexMetrika \/>/);
   assert.doesNotMatch(layout, /next\/headers|headers\(/);
   assert.match(config, /output: "export"/);
   assert.match(config, /trailingSlash: true/);
@@ -120,6 +128,15 @@ test("keeps the client content and local visual assets wired", async () => {
   assert.match(page, /application\/ld\+json/);
   assert.match(page, /AutoRepair/);
   assert.match(page, /serviceAddressLines/);
+  assert.match(page, /data-cookie-settings/);
+  assert.match(cookieConsent, /Разрешить аналитику/);
+  assert.match(cookieConsent, /Только необходимые/);
+  assert.match(cookieConsent, /localStorage/);
+  assert.match(yandexMetrika, /COOKIE_CONSENT_EVENT/);
+  assert.match(yandexLoader, /YANDEX_METRIKA_COUNTER_ID = 112386504/);
+  assert.match(yandexLoader, /https:\/\/mc\.yandex\.ru\/metrika\/tag\.js\?id=/);
+  assert.match(yandexLoader, /hasAnalyticsConsent\(consent\)/);
+  assert.doesNotMatch(yandexLoader, /reachGoal|noscript/);
 
   await Promise.all([
     access(new URL("../public/hero-variator-real.jpg", import.meta.url)),

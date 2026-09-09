@@ -97,7 +97,7 @@ export function LeadForm({ variant }: LeadFormProps) {
 
   const consent = (
     <label className="leadConsent">
-      <input name="consent" type="checkbox" required />
+      <input className="ym-disable-keys" name="consent" type="checkbox" required />
       <span>
         Я согласен на обработку персональных данных. Подробнее: <a href={legalLinks.privacy}>политика обработки персональных данных</a> и <a href={legalLinks.consent}>согласие на обработку персональных данных</a>.
       </span>
@@ -110,7 +110,7 @@ export function LeadForm({ variant }: LeadFormProps) {
     </p>
   );
 
-  const honeypot = <input className="leadHoneypot" name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" />;
+  const honeypot = <input className="leadHoneypot ym-disable-keys" name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" />;
 
   if (variant === "hero") {
     return (
@@ -122,12 +122,13 @@ export function LeadForm({ variant }: LeadFormProps) {
         <div className="formFields">
           <label>
             <span>Имя</span>
-            <input name="name" type="text" placeholder="Ваше имя" autoComplete="name" minLength={2} maxLength={80} required />
+            <input className="ym-disable-keys" name="name" type="text" placeholder="Ваше имя" autoComplete="name" minLength={2} maxLength={80} required />
           </label>
           <label>
             <span>Телефон</span>
             <input
               name="phone"
+              className="ym-disable-keys"
               type="tel"
               placeholder="+7 (___) ___-__-__"
               inputMode="tel"
@@ -143,7 +144,7 @@ export function LeadForm({ variant }: LeadFormProps) {
           </label>
           <label className="commentField">
             <span>Сообщение</span>
-            <input name="message" type="text" placeholder="Марка авто или симптом" maxLength={1000} />
+            <input className="ym-disable-keys" name="message" type="text" placeholder="Марка авто или симптом" maxLength={1000} />
           </label>
           <button type="submit" disabled={isSending}>{buttonLabel}</button>
         </div>
@@ -160,12 +161,13 @@ export function LeadForm({ variant }: LeadFormProps) {
       <h3>Опишите проблему — мастер свяжется с вами</h3>
       <label>
         Ваше имя
-        <input name="name" type="text" placeholder="Имя" autoComplete="name" minLength={2} maxLength={80} required />
+        <input className="ym-disable-keys" name="name" type="text" placeholder="Имя" autoComplete="name" minLength={2} maxLength={80} required />
       </label>
       <label>
         Телефон
         <input
           name="phone"
+          className="ym-disable-keys"
           type="tel"
           placeholder="+7 (___) ___-__-__"
           inputMode="tel"
@@ -181,7 +183,7 @@ export function LeadForm({ variant }: LeadFormProps) {
       </label>
       <label>
         Сообщение
-        <textarea name="message" placeholder="Марка автомобиля и симптомы" rows={4} maxLength={1000} />
+        <textarea className="ym-disable-keys" name="message" placeholder="Марка автомобиля и симптомы" rows={4} maxLength={1000} />
       </label>
       {honeypot}
       {consent}
