@@ -5,6 +5,7 @@ import {
   ANALYTICS_CONSENT,
   COOKIE_CONSENT_EVENT,
   COOKIE_CONSENT_STORAGE_KEY,
+  disableMetrikaForCurrentPage,
   NECESSARY_CONSENT,
 } from "./yandex-metrika-loader";
 import { legalLinks } from "./legal-data";
@@ -60,8 +61,16 @@ export function CookieConsent() {
   }, []);
 
   function choose(value: typeof ANALYTICS_CONSENT | typeof NECESSARY_CONSENT) {
+    const shouldReload = value === NECESSARY_CONSENT
+      ? disableMetrikaForCurrentPage(window)
+      : false;
+
     saveCookieConsent(value);
     setIsSettingsOpen(false);
+
+    if (shouldReload) {
+      window.location.reload();
+    }
   }
 
   const hasStoredChoice = storedChoice === ANALYTICS_CONSENT || storedChoice === NECESSARY_CONSENT;

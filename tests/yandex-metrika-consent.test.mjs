@@ -3,7 +3,9 @@ import test from "node:test";
 import {
   activateMetrikaIfConsented,
   ANALYTICS_CONSENT,
+  disableMetrikaForCurrentPage,
   NECESSARY_CONSENT,
+  YANDEX_METRIKA_DISABLE_FLAG,
   YANDEX_METRIKA_COUNTER_ID,
 } from "../app/yandex-metrika-loader.js";
 
@@ -60,4 +62,28 @@ test("loads one tag.js and one initialization only after analytics consent", () 
   activateMetrikaIfConsented({ ...browser, consent: ANALYTICS_CONSENT });
   assert.equal(browser.scripts.length, 1);
   assert.equal(browser.windowRef.ym.a.length, 1);
+});
+
+test("revoking consent disables an active counter and prevents tag.js after reload", () => {
+  const activeTab = createBrowser();
+  const preferences = new Map();
+
+  assert.equal(activateMetrikaIfConsented({ ...activeTab, consent: ANALYTICS_CONSENT }), true);
+  assert.equal(activeTab.windowRef.__cvtMetrikaInitialized, true);
+
+  const shouldReload = disableMetrikaForCurrentPage(activeTab.windowRef);
+  preferences.set("cvt-cookie-consent", NECESSARY_CONSENT);
+
+  assert.equal(shouldReload, true);
+  assert.equal(preferences.get("cvt-cookie-consent"), NECESSARY_CONSENT);
+  assert.equal(activeTab.windowRef[YANDEX_METRIKA_DISABLE_FLAG], true);
+  assert.equal(disableMetrikaForCurrentPage(activeTab.windowRef), false);
+
+  const reloadedTab = createBrowser();
+  reloadedTab.windowRef[YANDEX_METRIKA_DISABLE_FLAG] = true;
+  assert.equal(
+    activateMetrikaIfConsented({ ...reloadedTab, consent: preferences.get("cvt-cookie-consent") }),
+    false,
+  );
+  assert.equal(reloadedTab.scripts.length, 0);
 });

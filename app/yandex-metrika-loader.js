@@ -1,4 +1,5 @@
 export const YANDEX_METRIKA_COUNTER_ID = 112386504;
+export const YANDEX_METRIKA_DISABLE_FLAG = `disableYaCounter${YANDEX_METRIKA_COUNTER_ID}`;
 export const COOKIE_CONSENT_STORAGE_KEY = "cvt-cookie-consent";
 export const COOKIE_CONSENT_EVENT = "cvt-cookie-consent-change";
 export const ANALYTICS_CONSENT = "analytics";
@@ -6,6 +7,24 @@ export const NECESSARY_CONSENT = "necessary";
 
 export function hasAnalyticsConsent(value) {
   return value === ANALYTICS_CONSENT;
+}
+
+/**
+ * Uses Yandex Metrika's documented per-counter disable flag. The caller can
+ * safely reload only when this tab had already initialised the counter.
+ */
+export function disableMetrikaForCurrentPage(windowRef) {
+  const shouldReload = Boolean(windowRef.__cvtMetrikaInitialized)
+    && !windowRef.__cvtMetrikaRevocationReloadScheduled;
+  windowRef[YANDEX_METRIKA_DISABLE_FLAG] = true;
+  if (shouldReload) {
+    windowRef.__cvtMetrikaRevocationReloadScheduled = true;
+  }
+  return shouldReload;
+}
+
+function clearMetrikaDisableFlag(windowRef) {
+  delete windowRef[YANDEX_METRIKA_DISABLE_FLAG];
 }
 
 /**
@@ -17,6 +36,8 @@ export function activateMetrikaIfConsented({ windowRef, documentRef, consent }) 
   if (!hasAnalyticsConsent(consent)) {
     return false;
   }
+
+  clearMetrikaDisableFlag(windowRef);
 
   if (!windowRef.ym) {
     const queue = (...args) => {
