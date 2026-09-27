@@ -45,41 +45,73 @@ export function formatRussianPhone(value) {
 }
 
 export function isCompleteRussianPhone(value) {
-  return getRussianPhoneDigits(value).length === MAX_RUSSIAN_PHONE_DIGITS;
+  return typeof value === "string" && /^\+7 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/.test(value);
 }
 
-/**
- * Keeps the +7 prefix immutable and makes Backspace skip mask punctuation.
- * Text selections deliberately return null so the browser can perform its
- * normal selected-text deletion before the input formatter runs.
- */
-export function getRussianPhoneBackspaceState(value, selectionStart, selectionEnd) {
+function caretAfterDigits(value, count) {
+  if (count <= 0) return 2;
+  const positions = [...value.matchAll(/[0-9]/g)].slice(1);
+  return positions[Math.min(count, positions.length) - 1]?.index + 1 || 2;
+}
+
+/** Keep the caret next to the edited digit, not at the end of a reformatted value. */
+export function getRussianPhoneInputState(raw, caret = raw.length) {
+  const value = formatRussianPhone(raw);
+  const before = getRussianPhoneDigits(raw.slice(0, caret)).length;
+  return { value, caret: caret >= raw.length ? value.length : caretAfterDigits(value, before) };
+}
+
+/** Delete digits, not auto-inserted punctuation; never erase the immutable prefix. */
+export function getRussianPhoneDeletionState(value, selectionStart, selectionEnd, direction = "backward") {
   if (
     typeof value !== "string" ||
     !Number.isInteger(selectionStart) ||
-    !Number.isInteger(selectionEnd) ||
-    selectionStart !== selectionEnd
+    !Number.isInteger(selectionEnd)
   ) {
     return null;
   }
 
-  const cursor = Math.max(0, Math.min(selectionStart, value.length));
-  const nationalDigits = getRussianPhoneDigits(value);
-
-  if (cursor <= 2 || nationalDigits.length === 0) {
-    return { value: "+7", caret: 2 };
+  const start = Math.max(2, Math.min(selectionStart, value.length));
+  const end = Math.max(start, Math.min(selectionEnd, value.length));
+  const digits = getRussianPhoneDigits(value);
+  const positions = [...value.matchAll(/[0-9]/g)].slice(1).map((match) => match.index);
+  let first = positions.filter((index) => index < start).length;
+  let last = positions.filter((index) => index < end).length;
+  if (first === last) {
+    if (direction === "backward") first = Math.max(0, first - 1);
+    else last = Math.min(digits.length, last + 1);
   }
-
-  const digitsBeforeCursor = getRussianPhoneDigits(value.slice(0, cursor));
-  if (digitsBeforeCursor.length === 0) {
-    return { value: formatNationalDigits(nationalDigits), caret: 2 };
+  if (selectionStart === selectionEnd && direction === "backward" && start <= 4) {
+    first = 0;
+    last = 0;
   }
+  const next = formatNationalDigits(digits.slice(0, first) + digits.slice(last));
+  return { value: next, caret: caretAfterDigits(next, first) };
+}
 
-  const removeIndex = Math.min(digitsBeforeCursor.length, nationalDigits.length) - 1;
-  const remainingDigits = nationalDigits.slice(0, removeIndex) + nationalDigits.slice(removeIndex + 1);
+export function getRussianPhoneBackspaceState(value, start, end) {
+  return getRussianPhoneDeletionState(value, start, end, "backward");
+}
 
-  return {
-    value: formatNationalDigits(remainingDigits),
-    caret: formatNationalDigits(remainingDigits.slice(0, removeIndex)).length,
-  };
+/** Covers mobile keyboards which emit input events without a Backspace keydown. */
+export function getRussianPhoneChangeState(previous, raw, caret, inputType) {
+  if (/^deleteContent(Backward|Forward)$/.test(inputType ?? "") && raw !== previous && getRussianPhoneDigits(previous) === getRussianPhoneDigits(raw)) {
+    let start = 0;
+    while (start < raw.length && raw[start] === previous[start]) start++;
+    const backward = inputType === "deleteContentBackward";
+    const cursor = backward ? start + previous.length - raw.length : start;
+    return getRussianPhoneDeletionState(previous, cursor, cursor, backward ? "backward" : "forward") ?? getRussianPhoneInputState(raw, caret);
+  }
+  return getRussianPhoneInputState(raw, caret);
+}
+
+export function getRussianPhonePasteState(value, start, end, pasted) {
+  if (!/^[+0-9\s()-]+$/.test(pasted)) return { value, caret: start };
+  const digits = pasted.replace(/\D/g, "");
+  if ((/^[78]/.test(digits) && digits.length >= 11) || (start < 2 && end >= value.length)) {
+    const next = formatRussianPhone(pasted);
+    return { value: next, caret: next.length };
+  }
+  const raw = value.slice(0, Math.max(2, start)) + digits + value.slice(Math.max(2, end));
+  return getRussianPhoneInputState(raw, Math.max(2, start) + digits.length);
 }

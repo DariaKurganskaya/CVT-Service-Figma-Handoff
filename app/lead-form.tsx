@@ -1,8 +1,8 @@
 "use client";
 
-import { ChangeEvent, FormEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, ClipboardEvent, FormEvent, KeyboardEvent, useRef, useState } from "react";
 import { legalLinks } from "./legal-data";
-import { formatRussianPhone, getRussianPhoneBackspaceState, isCompleteRussianPhone } from "./phone";
+import { formatRussianPhone, getRussianPhoneChangeState, getRussianPhoneDeletionState, getRussianPhonePasteState, isCompleteRussianPhone } from "./phone";
 
 type LeadFormProps = {
   variant: "hero" | "contact";
@@ -18,34 +18,44 @@ const feedback = {
 export function LeadForm({ variant }: LeadFormProps) {
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [phone, setPhone] = useState(() => formatRussianPhone(""));
+  const sending = useRef(false);
+
+  function applyPhoneState(input: HTMLInputElement, nextState: { value: string; caret: number }) {
+    input.setCustomValidity("");
+    setPhone(nextState.value);
+    requestAnimationFrame(() => input.setSelectionRange(nextState.caret, nextState.caret));
+  }
 
   function handlePhoneChange(event: ChangeEvent<HTMLInputElement>) {
-    event.currentTarget.setCustomValidity("");
-    setPhone(formatRussianPhone(event.currentTarget.value));
+    const input = event.currentTarget;
+    const type = (event.nativeEvent as InputEvent).inputType;
+    applyPhoneState(input, getRussianPhoneChangeState(phone, input.value, input.selectionStart ?? input.value.length, type));
   }
 
   function handlePhoneKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key !== "Backspace") {
+    if (event.key !== "Backspace" && event.key !== "Delete") {
       return;
     }
 
     const input = event.currentTarget;
-    const nextState = getRussianPhoneBackspaceState(phone, input.selectionStart, input.selectionEnd);
+    const nextState = getRussianPhoneDeletionState(phone, input.selectionStart, input.selectionEnd, event.key === "Delete" ? "forward" : "backward");
     if (nextState === null) {
       return;
     }
 
     event.preventDefault();
-    input.setCustomValidity("");
-    setPhone(nextState.value);
+    applyPhoneState(input, nextState);
+  }
 
-    requestAnimationFrame(() => {
-      input.setSelectionRange(nextState.caret, nextState.caret);
-    });
+  function handlePhonePaste(event: ClipboardEvent<HTMLInputElement>) {
+    event.preventDefault();
+    const input = event.currentTarget;
+    applyPhoneState(input, getRussianPhonePasteState(phone, input.selectionStart ?? phone.length, input.selectionEnd ?? phone.length, event.clipboardData.getData("text")));
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (sending.current) return;
 
     const form = event.currentTarget;
     const phoneInput = form.elements.namedItem("phone");
@@ -59,6 +69,7 @@ export function LeadForm({ variant }: LeadFormProps) {
     }
 
     const data = new FormData(form);
+    sending.current = true;
     setSubmitState("sending");
 
     try {
@@ -88,6 +99,8 @@ export function LeadForm({ variant }: LeadFormProps) {
       setSubmitState("success");
     } catch {
       setSubmitState("error");
+    } finally {
+      sending.current = false;
     }
   }
 
@@ -137,6 +150,7 @@ export function LeadForm({ variant }: LeadFormProps) {
               value={phone}
               onChange={handlePhoneChange}
               onKeyDown={handlePhoneKeyDown}
+              onPaste={handlePhonePaste}
               maxLength={18}
               title="Введите номер полностью в формате +7 (999) 999-99-99"
               required
@@ -176,6 +190,7 @@ export function LeadForm({ variant }: LeadFormProps) {
           value={phone}
           onChange={handlePhoneChange}
           onKeyDown={handlePhoneKeyDown}
+          onPaste={handlePhonePaste}
           maxLength={18}
           title="Введите номер полностью в формате +7 (999) 999-99-99"
           required

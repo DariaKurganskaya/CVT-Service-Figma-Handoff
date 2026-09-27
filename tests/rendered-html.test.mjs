@@ -112,6 +112,11 @@ test("keeps the client content and local visual assets wired", async () => {
   assert.match(leadForm, /disabled=\{isSending\}/);
   assert.match(leadForm, /formatRussianPhone/);
   assert.match(leadForm, /isCompleteRussianPhone/);
+  assert.equal((leadForm.match(/onPaste=\{handlePhonePaste\}/g) ?? []).length, 2);
+  assert.equal((leadForm.match(/onKeyDown=\{handlePhoneKeyDown\}/g) ?? []).length, 2);
+  assert.match(leadForm, /if \(sending\.current\) return/);
+  assert.match(leadForm, /!response\.ok \|\| !result\?\.ok/);
+  assert.doesNotMatch(leadForm, /reachGoal/);
   assert.doesNotMatch(leadForm, /mailto:|alert\(/);
   assert.match(mobileMenu, /removeAttribute\("open"\)/);
   assert.match(mobileMenu, /mobileMenuDocked/);
