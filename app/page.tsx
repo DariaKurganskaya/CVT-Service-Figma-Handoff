@@ -140,6 +140,7 @@ export default function Home() {
   return (
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(autoRepairStructuredData) }} />
+      <link rel="preload" as="image" href="/hero-variator-real.jpg" fetchPriority="high" />
       <section className="hero" id="top">
         <div className="heroShade" aria-hidden="true" />
 
@@ -223,7 +224,7 @@ export default function Home() {
           </div>
 
           <figure className="aboutPhoto">
-            <img src="/service-diagnostic.webp" alt="Специалист проводит диагностику вариатора" width="1536" height="1024" />
+            <img src="/service-diagnostic.webp" alt="Специалист проводит диагностику вариатора" width="1536" height="1024" loading="lazy" decoding="async" />
             <figcaption>Специализация — только CVT</figcaption>
           </figure>
 
@@ -273,7 +274,7 @@ export default function Home() {
         <div className="shell">
           <div className="processGrid">
             <div className="processVisual">
-              <img src="/process-repair-real.jpg" alt="Мастер непосредственно ремонтирует вариатор в сервисе" width="1800" height="1200" />
+              <img src="/process-repair-real.jpg" alt="Мастер непосредственно ремонтирует вариатор в сервисе" width="1800" height="1200" loading="lazy" decoding="async" />
               <div className="visualBadge"><strong>30</strong><span>минут<br />на диагностику*</span></div>
             </div>
 
@@ -308,7 +309,7 @@ export default function Home() {
           <div className="brandGrid">
             {brands.map((brand) => (
               <figure key={brand.name} title={brand.name}>
-                <img src={brand.src} alt={`Логотип ${brand.name}`} width="1024" height="1024" />
+                <img src={brand.src} alt={`Логотип ${brand.name}`} width="1024" height="1024" loading="lazy" decoding="async" />
               </figure>
             ))}
           </div>
@@ -401,7 +402,7 @@ export default function Home() {
       <footer className="footer">
         <div className="shell footerInner">
           <div className="footerAbout">
-            <a className="footerBrand" href="#top" aria-label="CVT Сервис — наверх"><img src="/client-logo-clean.png" alt="CVT Сервис — ремонт вариаторов" width="826" height="229" /></a>
+            <a className="footerBrand" href="#top" aria-label="CVT Сервис — наверх"><img src="/client-logo-clean.png" alt="CVT Сервис — ремонт вариаторов" width="826" height="229" loading="lazy" decoding="async" /></a>
             <p>Специализированный ремонт вариаторов в Москве и области.</p>
             <SocialLinks className="footerSocials" showDetails />
           </div>

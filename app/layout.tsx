@@ -1,7 +1,17 @@
 import type { Metadata } from "next";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { CookieConsent } from "./cookie-consent";
 import { YandexMetrika } from "./yandex-metrika";
+
+// Served from the static export: no Google Fonts connection at visit time.
+const montserrat = Montserrat({
+  subsets: ["latin", "cyrillic"],
+  weight: "variable",
+  display: "swap",
+  variable: "--font-montserrat",
+  adjustFontFallback: true,
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://remontvariator.ru"),
@@ -47,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
+    <html lang="ru" className={montserrat.variable}>
       <body>
         {children}
         <CookieConsent />
